@@ -1,10 +1,10 @@
 import './App.css';
-import { MainPage } from './pages/MainPage';
+import { MainPage } from './components/MainPage';
 
 function App() {
   return (
     <div className="container">
-      <h1>Hello</h1>
+      <h1 style={{ position: 'absolute', opacity: .3 }}>App</h1>
       <MainPage></MainPage>
     </div>
   );
