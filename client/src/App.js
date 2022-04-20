@@ -1,11 +1,27 @@
 import './App.css';
+import { Context } from './contexts/Context';
 import { MainPage } from './components/MainPage';
+
+const schedule = {
+  events: [
+    {
+      title: '1 Min Niji Drawings',
+      participants: ['Petra Gurin'],
+      urls: ['https://www.youtube.com/watch?v=Mp5bwFeD-SA'],
+      date: new Date(),
+      type: 'Talking Stream',
+      tags: ['drawing', 'english'],
+      source: 'https://nitter.net/Petra_Gurin/status/1515910817166008321#m'
+    }
+  ],
+}
 
 function App() {
   return (
     <div className="container">
-      <h1 style={{ position: 'absolute', opacity: .3 }}>App</h1>
-      <MainPage></MainPage>
+      <Context.Provider value={schedule}>
+        <MainPage />
+      </Context.Provider>
     </div>
   );
 }

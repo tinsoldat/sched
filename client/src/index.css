@@ -1,5 +1,9 @@
 :root {
-  --cell-border-color: lightgray solid 1px;
+  --cell-border: lightgray solid 1px;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 body {
@@ -16,20 +20,61 @@ code {
     monospace;
 }
 
+.temp { position: absolute; opacity: .3 }
+
 .main {
-  width: 100vw;
+  margin: 0 auto;
+  /* width: 1540px; */
   height: 100vh;
 }
 
+.week {
+  position: relative;
+  height: 100%;
+}
+
 .columns {
+  height: 1008px;
   display: flex;
   flex-flow: row nowrap;
 }
 
+.hours {
+  position: relative;
+  border-right: var(--cell-border);
+  width: 50px;
+}
+
+.hour {
+  position: relative;
+  height: 42px;
+}
+
+.hour-mark {
+  position: relative;
+  top: -12px;
+}
+
 .day {
   display: block;
-  border-left: var(--cell-border-color);
+  border-right: var(--cell-border);
+  max-width: calc(100% / 7);
   min-width: 180px;
   min-height: 24em;
   flex: auto;
+}
+
+.event {
+  position: relative;
+  width: 100%;
+  background: pink;
+  border: solid black 1px;
+}
+
+.title {
+  background: rgba(0,0,0,.1);
+}
+
+.time {
+  float: right;
 }
