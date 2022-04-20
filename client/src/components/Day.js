@@ -1,10 +1,8 @@
 import { Event } from "./Event"
 
 export const Day = (props) => {
-  console.log(props);
   
   const events = props.events ?? []
-  console.log(events);
 
   return (
     <div className="day">
