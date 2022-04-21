@@ -15,26 +15,18 @@ export const Week = (props) => {
   }
   weekStart.setDate(weekStart.getDate() - date.getDay() + weekDiff)
   
-  const days = [], labels = []
+  const days = []
   for (let index = 0; index < 7; index++) {
     const day = new Date()
     day.setDate(weekStart.getDate() + index)
     const events = context.events.filter((event) => event.date.getDate() === day.getDate())
     days.push(<Day events={events} date={day} key={day.getDate()}></Day>)
-    labels.push(<div className="weekday-label" key={day.getDate()}><span className="weekday">{day.getDate()}</span></div>)
   }
 
   return (
     <div className="week">
       <Hours></Hours>
-      <div className="flex-col wide">
-        <div className="weekday-labels">
-          {labels}
-        </div>
-        <div className="days">
-          {days}
-        </div>
-      </div>
+      {days}
     </div>
   )
 }

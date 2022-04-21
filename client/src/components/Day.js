@@ -3,10 +3,13 @@ import { Event } from "./Event"
 export const Day = (props) => {
   
   const events = props.events ?? []
+  const date = props.date
 
   return (
     <div className="day">
-      {/* <h3 className="temp">{date.toDateString()}</h3> */}
+      <div className="weekday-label" key={date.getDate()}>
+        <span className="weekday">{date.getDate()}</span>
+      </div>
       {events.map(event => {
         return <Event key={event.date.getTime()} event={event}></Event>
       })}
