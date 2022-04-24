@@ -2,119 +2,108 @@ import fetch from 'node-fetch'
 import * as cheerio from 'cheerio'
 import fs from 'fs'
 
-
-const get = async () => {
-  const response = await fetch('https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=0*1')
-  const body = await response.text()
-  return body
-}
-
 /** Main regex
  * [1] - 00時00分
- * [2] - 他
+ * [2] - 他 or ？
  * [3] - Participants
  * [4] - Platform
  * [5] - Title
  * [6] - Note
  */
-const regex = /(.+)～ (他)? (.+?) at:(.*(?:、?(?:ツイキャス|YouTube|Twitch|bilibili|Twitter Live))+(?:チャンネル)?(?:\(.+\))?)(?: (.+[^※])?(※.+)?)?/
-const dayRegex = /(\d\d) (\d\d?), (\d{4})/
+const regex = /^(.+)～ (他|？)? (.+?) at:(.*(?:？|文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?)([^※\n]+)?(?: ※(.*))?(?:$|\n)/
+const dayRegex = /(\d\d) (\d\d?), (\d{4}) (\d\d|？)時(\d\d|？)/
 /** Platform regex
- * [1] - Names or 各々
+ * [1] - Names, 両名 or 各々
  * [2] - の, 以外の, 公式
  * [3] - Platform
  * [4] - Note
  */
-const platformRegex = /(?:(.*?)(以外の|の|公式))?((?:(?:ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?、?)+)(\(.+\))?/g
+const atRegex = /(?:(.*?)(以外の|の|公式))?((?:(?:文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?、?)+)(\(.+\))?/
+const featRegex = /(.*)(?:\(|^)([^\(\)]+)(?:\)|$)/
 const LOCALE_OFFSET = new Date().getTimezoneOffset()
 const JST_OFFSET = -540 // 9 hours
 const OFFSET = JST_OFFSET - LOCALE_OFFSET
-const parse = body => {
+
+const parseListItem = li => {
+
+  const match = li.match(regex)
+
+  if (!match) return { text: li }
+
+  return {
+    date: match[1],
+    feat: match[3].trim(),
+    at: match[4],
+    title: match[5],
+    note: match[6]
+  }
+}
+
+const parseBody = body => {
+
+  const events = []
 
   const $ = cheerio.load(body)
 
   $('del').remove()
 
-  const days = $('.minicalendar_viewer').map((i, calendar) => {
+  $('.minicalendar_viewer').each((i, calendar) => {
 
-    const h3 = $($(calendar).prev()).text().match(dayRegex)
-    const currentDate = new Date(h3[3], h3[2] - 1, h3[1], 0, OFFSET)
-    
-    return $('.list1 > li', calendar).map((j, li) => {
+    const h3 = $(calendar).prev().text()
 
-      const text = $(li).text()
-      const match = text.match(regex)
-
-      if (match) {
-        let date = new Date(currentDate)
-        date.setHours(match[1].slice(0, 2), parseInt(match[1].slice(3,5)) + OFFSET)
-        const participants = match[3].trim().split('＆')
-        const platformMatch = [...match[4].matchAll(platformRegex)]
-        if (platformMatch.length > 1) console.log(platformMatch);
-        
-        const livers = {}
-        for (const elem of platformMatch) {
-          const flag = elem[2]
-          const site = elem[3].replace('チャンネル', '').replace('、', ', ')
-          if (!elem[1]) {
-            livers.solo = site
-            break
-          }
-          const names = elem[1].split('、')
-          for (const name of names) {
-            livers[name] = {}
-            switch (flag) {
-              case 'の':
-                livers[name][site] = true
-                break;
-              case '以外の':
-                livers[name][site] = false
-                break;
-              case '公式' || 'オフィシャル':
-                livers.main = {}
-                livers.main[site] = true
-                break;
-              default:
-                console.log('wrong event format: ', date, text)
-                break;
-            }
-          }
-        }
-        console.log(match[4], livers);
-
-
-        const title = match[5]
-        const note = match[6]
-        
-
-        return {
-          date,
-          participants,
-          livers,
-          title,
-          note
-        }
-      } else {
-        // console.log(j, text)
-      }
+    $('.list1 > li', calendar).each((j, li) => {
+      events.push(h3 + ' ' + $($(li).text()).text())
     })
   })
+
+  return events
+
 }
+
+const get = async (offset = 0, days = 1) => {
+  const URI = `https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=${offset}*${days}`
+  console.log('GET ' + URI);
+  const response = await fetch(URI)
+  const body = await response.text()
+  return body
+}
+
 
 const wikiwiki = async (interval) => {
 
-  // const body = await get()
-  // fs.writeFileSync('./public/body.html', body, (err) => (console.log(err)))
+  // const body = await get(0, 1)
+  // fs.writeFileSync('./public/temp.html', body, (err) => (console.log(err)))
   const body = fs.readFileSync('./public/body.html').toString()
-  const events = parse(body)
 
+  const unresolved = ['']
+  const events = parseBody(body).map(parseListItem).filter(event => { if (!event.text) return true; else unresolved.push(event.text) })
+  events.forEach(
+    ( event ) => {
+
+      const day = event.date.match(dayRegex).map(val => parseInt(val))
+      event.date = new Date(day[3], day[2] - 1, day[1], day[4] || 0, day[5] + OFFSET || 0)
+
+      const at = event.at.replace('チャンネル', '').match(atRegex) ?? [ event.at, 'other' ]
+
+      event.feat = event.feat.match(featRegex)[2].split('＆').reduce((res, cur) => {
+        const pov = (
+          (!at[1] || at[1] === '各々' || at[1] === '両名') ||
+          (at[1].includes(cur) ? at[2] === 'の' : at[2] === '以外の') ||
+          (at[2] === '公式' && (res.main = at[1]) && false)
+        ) ? at[3] : undefined
+        res[cur] = pov
+        return res
+      }, {})
+    }
+  )
+
+  console.log(events);
+  
+  console.log('unable to parse events: ', unresolved.filter(val => val.length > 11));
+  console.log(unresolved.length);
 
 }
 
 wikiwiki(1)
 
 export default wikiwiki
-
-/**
- *  https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=[offset]*[days]&mode=[past|future]
- */
