@@ -98,9 +98,8 @@ const wikiwiki = async (interval) => {
   )
 
   console.log(events);
-  
-  console.log('unable to parse events: ', unresolved.filter(val => val.length > 11));
-  console.log(unresolved.length);
+
+  console.log('unable to parse events: ', unresolved.filter(val => val.length > 11), unresolved.length)
 
 }
 
