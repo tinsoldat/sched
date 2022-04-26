@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import fetchWiki from 'node-fetch'
 import * as cheerio from 'cheerio'
 import fs from 'fs'
 
@@ -7,7 +7,7 @@ import fs from 'fs'
  * [2] - 他 or ？
  * [3] - Participants
  * [4] - Platform
- * [5] - Title
+ * [5] - Description
  * [6] - Note
  */
 const regex = /^(.+)～ (他|？)? (.+?) at:(.*(?:？|文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?)([^※\n]+)?(?: ※(.*))?(?:$|\n)/
@@ -34,8 +34,8 @@ const parseListItem = li => {
     date: match[1],
     feat: match[3].trim(),
     at: match[4],
-    title: match[5],
-    note: match[6]
+    description: match[5] && '',
+    note: match[6] && ''
   }
 }
 
@@ -63,19 +63,19 @@ const parseBody = body => {
 const get = async (offset = 0, days = 1) => {
   const URI = `https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=${offset}*${days}`
   console.log('GET ' + URI);
-  const response = await fetch(URI)
+  const response = await fetchWiki(URI)
   const body = await response.text()
   return body
 }
 
 
-const wikiwiki = async (interval) => {
+const fetchWiki = async () => {
 
-  // const body = await get(0, 1)
-  // fs.writeFileSync('./public/temp.html', body, (err) => (console.log(err)))
-  const body = fs.readFileSync('./public/body.html').toString()
+  const body = await get(0, 1)
+  fs.writeFileSync('./public/temp.html', body, (err) => (console.log(err)))
+  // const body = fs.readFileSync('./public/body.html').toString()
 
-  const unresolved = ['']
+  const unresolved = []
   const events = parseBody(body).map(parseListItem).filter(event => { if (!event.text) return true; else unresolved.push(event.text) })
   events.forEach(
     ( event ) => {
@@ -97,12 +97,10 @@ const wikiwiki = async (interval) => {
     }
   )
 
-  console.log(events);
-
   console.log('unable to parse events: ', unresolved.filter(val => val.length > 11), unresolved.length)
+
+  return events
 
 }
 
-wikiwiki(1)
-
-export default wikiwiki
+export { fetchWiki }

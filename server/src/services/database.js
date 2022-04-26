@@ -1,9 +1,15 @@
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
+import eventSchema from '../models/eventSchema'
+
+const config = dotenv.config()
+
+const DATABASE = process.env.DATABASE ?? 'mongodb://127.0.0.1:27017/test'
 
 const main = async () => {
 
-  await mongoose.connect('mongodb://127.0.0.1:27017/test')
+  await mongoose.connect(DATABASE)
 
   const kittySchema = new mongoose.Schema({
     name: String

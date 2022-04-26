@@ -1,12 +1,12 @@
 import './App.css';
-import { Context } from './contexts/Context';
+import { Context } from './contexts/EventContext';
 import { MainPage } from './components/MainPage';
 
-const schedule = {
+const context = {
   events: [
     {
       title: '1 Minute Niji Drawings',
-      participants: ['Petra Gurin'],
+      feat: ['Petra Gurin'],
       urls: ['https://www.youtube.com/watch?v=Mp5bwFeD-SA'],
       date: new Date(),
       type: 'Talking Stream',
@@ -15,9 +15,9 @@ const schedule = {
     },
     {
       title: '1 Minute Niji Drawings',
-      participants: ['Petra Gurin'],
+      feat: ['Petra Gurin'],
       urls: ['https://www.youtube.com/watch?v=Mp5bwFeD-SA'],
-      date: new Date(1650631765471),
+      date: (() => {const q = new Date(); q.setDate(30); q.setHours(15); q.setMinutes(0); return q})(),
       type: 'Talking Stream',
       tags: ['drawing', 'english'],
       source: 'https://nitter.net/Petra_Gurin/status/1515910817166008321#m'
@@ -28,7 +28,8 @@ const schedule = {
 function App() {
   return (
     <div className="container">
-      <Context.Provider value={schedule}>
+      <Context.Provider value={context}>
+        <div className="toolbar-container">Toolbar</div>
         <MainPage />
       </Context.Provider>
     </div>
