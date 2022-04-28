@@ -1,29 +1,47 @@
 const { Router } = require('express');
 const fetchWiki = require('./services/wikiwiki')
 const Event = require('./models/Event')
+
 const router = Router()
 
-router.get('/delete', async (req, res) => {
-  await Event.deleteMany({})
-  console.log('test collection cleared');
-  res.send('deleted')
-})
+//TODO validation middleware
+//GET events from=yyyy-mm-dd&to=yyyy-mm-dd&name=Full Name
+router.get('/events', (req, res) => {
+  const { from, to, name } = req.query
 
-router.get('/update', async (req, res) => {
+  const regex = /^\d\d\d\d-\d\d-\d\d$/
+  const hasFrom = regex.test(from)
+  const hasTo = regex.test(to)
+  const query = Event.find()
+  if (hasFrom || hasTo) {
+    if (hasFrom) query.find({ date : { $gte: new Date(from) } })
+    if (hasTo) query.find({ date: { $lt: new Date(to) } })
+  }
+  if (name) query.find({ ['feat.' + name]: { $ne: null } })
+
+  query.exec((err, events) => {
+    res.json(events)
+  })
+})
+//TODO POST add a new event
+router.get('/events/create', (req, res) => {
+  res.json(req.query)
+})
+//POST update the event database
+router.get('/events/update', async (req, res) => {
   const { events } = await fetchWiki()
-  res.json(events)
   await Event.insertMany(events)
+  res.status(201).json(events)
   console.log('inserted', events.length, 'events');
 })
-
-router.get('/today', async (req, res) => {
-  const start = new Date(), end = new Date
-  start.setHours(0, 0, 0, 0)
-  end.setHours(23, 59, 59, 999)
-  Event.find({ date: { $gte: new Date('2022-04-28') } }, '', (err, events) => {
-    console.log(events);
-    res.json(events)
-  })//, $lt: new Date('2022-03-27')
+//TODO POST update an event by id
+router.get('/events/update/:id', (req, res) => {
+  res.json(req.params)
+})
+//DELETE clear the collection
+router.get('/events/delete', async (req, res) => {
+  await Event.deleteMany({})
+  res.send('deleted')
 })
 
 module.exports = router

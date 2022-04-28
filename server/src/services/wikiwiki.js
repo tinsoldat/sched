@@ -10,7 +10,7 @@ const fs = require('fs')
  * [5] - Description
  * [6] - Note
  */
-const regex = /^(.+)～ (他|？)? (.+?) at:(.*(?:？|文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?)([^※\n]+)?(?: ※(.*))?(?:$|\n)/
+const regex = /^(.+)～ (他|？)? (.+?) at:(.*(?:？|文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?)([^※\n]+)?(?: ※(.*))?(?:\n|$)/
 const dayRegex = /(\d\d) (\d\d?), (\d{4}) (\d\d|？)時(\d\d|？)/
 /** Platform regex
  * [1] - Names, 両名 or 各々
@@ -18,7 +18,7 @@ const dayRegex = /(\d\d) (\d\d?), (\d{4}) (\d\d|？)時(\d\d|？)/
  * [3] - Platform
  * [4] - Note
  */
-const atRegex = /(?:(.*?)(以外の|の|公式))?((?:(?:文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?、?)+)(\(.+\))?/
+const atRegex = /^(?:(.*?)(以外の|の|公式))?((?:(?:文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?、?)+)(\(.+\))?/
 const featRegex = /(.*)(?:\(|^)([^\(\)]+)(?:\)|$)/
 const LOCALE_OFFSET = new Date().getTimezoneOffset()
 const JST_OFFSET = -540 // 9 hours
@@ -28,7 +28,7 @@ const parseListItem = li => {
 
   const match = li.match(regex)
 
-  if (!match) return { text: li }
+  if (!match) return { description: li }
 
   return {
     date: match[1],
@@ -60,8 +60,8 @@ const parseBody = body => {
 
 }
 
-const get = async (offset = 0, days = 1) => {
-  const URI = `https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=${offset}*${days}`
+const get = async (offset = 0, days = 1, mode = 'past') => {
+  const URI = `https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=${offset}*${days}&mode=${mode}`
   console.log('GET ' + URI);
   const response = await fetch(URI)
   const body = await response.text()
@@ -69,16 +69,16 @@ const get = async (offset = 0, days = 1) => {
 }
 
 
-const fetchWiki = async () => {
+const fetchWiki = async (offset = 0, days = 1, mode = 'past') => {
 
-  // const body = await get(0, 1)
-  // fs.writeFileSync('./public/temp.html', body, (err) => (console.log(err)))
-  const body = fs.readFileSync('./public/body.html').toString()
+  const body = await get(offset, days, mode)
+  fs.writeFileSync('./public/body.html', body, (err) => (console.log(err)))
+  // const body = fs.readFileSync('./public/body.html').toString()
 
   const unresolved = []
   const events = parseBody(body)
     .map(parseListItem)
-    .filter(event => { if (!event.text) return true; else unresolved.push(event.text) })
+    .filter(event => { if (!event.date) return true; else unresolved.push(event.description) })
   events.forEach(
     (event) => {
 
@@ -91,7 +91,8 @@ const fetchWiki = async () => {
         const pov = (
           (!at[1] || at[1] === '各々' || at[1] === '両名') ||
           (at[1].includes(cur) ? at[2] === 'の' : at[2] === '以外の') ||
-          (at[2] === '公式' && (res.main = at[1]) && false)
+          ((at[2] === '公式' || at[3] === 'ニコニコ生放送' || at[3] === '文化放送') && (res.main = at[1]) && false) ||
+          (false)
         ) ? at[3] : ''
         res[cur] = pov
         return res
@@ -99,7 +100,7 @@ const fetchWiki = async () => {
     }
   )
 
-  console.log('unable to parse events: ', unresolved, unresolved.length)
+  console.log(unresolved, 'unable to parse events:', unresolved.length)
 
   return { events, unresolved }
 
