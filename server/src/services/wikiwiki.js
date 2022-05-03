@@ -71,17 +71,26 @@ const get = async (offset = 0, days = 1, mode = 'past') => {
 
 const fetchWiki = async (offset = 0, days = 1, mode = 'past') => {
 
-  const body = await get(offset, days, mode)
-  fs.writeFileSync('./public/body.html', body, (err) => (console.log(err)))
-  // const body = fs.readFileSync('./public/body.html').toString()
+  // const body = await get(offset, days, mode)
+  // fs.writeFileSync('./public/body.html', body, (err) => (console.log(err)))
+  const body = fs.readFileSync('./public/body.html').toString()
 
   const unresolved = []
   const events = parseBody(body)
     .map(parseListItem)
-    .filter(event => { if (!event.date) return true; else unresolved.push(event.description) })
+    .filter(
+      event => {
+        if (event.date) return true
+
+        unresolved.push(event.description)
+        return false
+
+      }
+    )
   events.forEach(
     (event) => {
 
+      console.log(event);
       const day = event.date.match(dayRegex).map(val => parseInt(val))
       event.date = new Date(day[3], day[2] - 1, day[1], day[4] || 0, day[5] + OFFSET || 0)
 
@@ -97,11 +106,13 @@ const fetchWiki = async (offset = 0, days = 1, mode = 'past') => {
         res[cur] = pov
         return res
       }, {})
+      return event
     }
   )
 
-  console.log(unresolved, 'unable to parse events:', unresolved.length)
+  // console.log(unresolved, 'unable to parse events:', unresolved.length)
 
+  console.log(events);
   return { events, unresolved }
 
 }

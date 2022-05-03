@@ -29,7 +29,7 @@ router.get('/events/create', (req, res) => {
 })
 //POST update the event database
 router.get('/events/update', async (req, res) => {
-  const { events } = await fetchWiki()
+  const { events } = await fetchWiki(0, 7, 'past')
   await Event.insertMany(events)
   res.status(201).json(events)
   console.log('inserted', events.length, 'events');
