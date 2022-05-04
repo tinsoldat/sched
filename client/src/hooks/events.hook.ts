@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Event } from "../contexts/EventsContext";
+import { Event } from "../typings";
 import { useFetch } from "./fetch.hook";
 
 export function useEvents(filter: (val: Event) => boolean, start: Date) {

@@ -1,4 +1,9 @@
-import { createContext } from "react";
+export interface Event {
+  date: Date,
+  feat: {},
+  description: '',
+  note: ''
+}
 
 export interface Liver {
   name: string,
@@ -9,7 +14,3 @@ export interface Liver {
   }
   color: string
 }
-
-const defaultValue: Liver[] = []
-
-export const LiversContext = createContext(defaultValue)

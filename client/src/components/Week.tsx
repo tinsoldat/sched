@@ -1,8 +1,9 @@
 import React from 'react'
+import { Event } from '../typings'
 import { Day } from './Day'
 import '../styles/Week.sass'
 
-export const Week = () => {
+export const Week = ({ events }: { events: Event[][]}) => {
 
   return (
     <div className="week">
@@ -38,7 +39,7 @@ export const Week = () => {
           </div>
         </div>
         {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(
-          (val, i) => <Day key={val} day={i} />
+          (val, i) => <Day key={val} day={events[i]} />
         )}
       </div>
     </div>

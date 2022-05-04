@@ -1,20 +1,14 @@
 import React from 'react'
-import { EventsContext } from '../contexts/EventsContext'
+import { Event } from '../typings'
 
-export const Day = ({ day }: { day: number }) => {
+export const Day = ({ day }: { day: Event[] }) => {
   return (
     <div className="day">
-      <EventsContext.Consumer>
-        {value => {
-          return <div className="events">
-            <div className="event-card">
-              {value?.[day].map((value, i) => {
-                return <div key={i}>{value.description}</div>
-              })}
-            </div>
-          </div>
-        }}
-      </EventsContext.Consumer>
+      <div className="event-card">
+        {day.map((value, i) => {
+          return <div key={i}>{value.description}</div>
+        })}
+      </div>
     </div>
   )
 }
