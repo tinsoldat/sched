@@ -8,7 +8,7 @@ export const Week = () => {
     <div className="week">
       <div className="week__header">
         <div className="gutter"></div>
-        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(
+        {['Sunday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Monday'].map(
           (val, i) => <div key={i} className="weekday">
             <div className="weekday__name-container">
               <div className="weekday__name">
