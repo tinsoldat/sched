@@ -17,7 +17,7 @@ router.get('/events', (req, res) => {
     if (hasFrom) query.find({ date : { $gte: new Date(from) } })
     if (hasTo) query.find({ date: { $lt: new Date(to) } })
   }
-  if (name) query.find({ ['feat.' + name]: { $ne: null } })
+  if (name) query.find({ feat: { $elemMatch: { $elemMatch: { $in: [name] } } } })
 
   query.exec((err, events) => {
     res.json(events)

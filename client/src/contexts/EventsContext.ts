@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 export interface Event {
   date: Date,
-  feat: {},
+  feat: [string, string][]
   description: '',
   note: ''
 }
