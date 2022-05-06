@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const fetchWiki = require('./services/wikiwiki')
-const Event = require('./models/Event')
+const Event = require('./models/Event');
+const Liver = require('./models/Liver');
 
 const router = Router()
 

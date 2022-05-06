@@ -61,7 +61,7 @@ const parseBody = body => {
 
 }
 
-const get = async (offset = 0, days = 1, mode = 'past') => {
+const get = async (offset = 0, days = 1, mode = 'past', url) => {
   const URI = `https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=${offset}*${days}&mode=${mode}`
   console.log('GET ' + URI);
   const response = await fetch(URI)
@@ -70,7 +70,7 @@ const get = async (offset = 0, days = 1, mode = 'past') => {
 }
 
 
-const fetchWiki = async (offset = 0, days = 1, mode = 'past') => {
+const fetchSchedule = async (offset = 0, days = 1, mode = 'past') => {
 
   // const body = await get(offset, days, mode)
   // fs.writeFileSync('./public/body.html', body, (err) => (console.log(err)))
@@ -119,7 +119,7 @@ const fetchWiki = async (offset = 0, days = 1, mode = 'past') => {
 
   // console.log(events);
   return { events, unresolved }
-
 }
 
-module.exports = fetchWiki
+
+module.exports = { fetchSchedule }

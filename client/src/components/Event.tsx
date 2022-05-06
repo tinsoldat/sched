@@ -7,7 +7,10 @@ export const Event = ({ event }: { event: Model }) => {
   let { date, feat, description, note } = event
   date = new Date(date)
   const hours = date.getHours(), minutes = date.getMinutes()
-  const top = (((hours + 3) % 24 * 60 + minutes) / 1440 * 960) % 960 + 'px'
+  let minSinceMidnight = hours * 60 + minutes
+  if (minSinceMidnight > 1380) minSinceMidnight -= minSinceMidnight % 1380
+  //steps of 15 minutes, no 23hr+
+  const top = Math.floor((minSinceMidnight) / 15) / 0.96 + '%'
   const time = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
   return (
     <div className="event" style={{ top }}>
@@ -16,8 +19,8 @@ export const Event = ({ event }: { event: Model }) => {
           <div className="avatars-container">
             <img src={avatar} alt="avatar" className='avatar' />
           </div>
+          <div className="name">{feat[0][0]}</div>
         </div>
-        <div className="name">{feat[0][0]}</div>
         <div className="time">{time}</div>
       </div>
       <div className="description">

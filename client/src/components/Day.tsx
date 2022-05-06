@@ -8,13 +8,11 @@ export const Day = ({ day }: { day: number }) => {
       <EventsContext.Consumer>
         {value => {
           return <div className="events">
-            <div className="event-card">
               {value?.[day].map((value, i) => {
                 return <Event key={i} event={value} />
                 // return <div>{value.feat[0][0]}</div>
               })}
             </div>
-          </div>
         }}
       </EventsContext.Consumer>
     </div>

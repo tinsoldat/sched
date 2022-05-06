@@ -6,40 +6,40 @@ export const Week = () => {
 
   return (
     <div className="week">
-      <div className="week__header">
-        <div className="gutter"></div>
-        {['Sunday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Monday'].map(
-          (val, i) => <div key={i} className="weekday">
-            <div className="weekday__name-container">
-              <div className="weekday__name">
-                {val}
+      <div className="week-inner">
+        <div className="header">
+          <div className="day-names">
+            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(
+              (val) => <div className="day-name-container" key={val}>
+                <span className="day-name">{val}</span>
+                <div className="day-separator"></div>
               </div>
-              <div className="weekday__date">
-                {i + 10}
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="shadow"></div>
-      </div>
-      <div className="week__content">
-        <div className="gutter">
-          <div className="hours">
-            {
-              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,].map((val, i) =>
-              (<div className="hour" key={i}>
-                <div className="hour__separator"></div>
-                <div className="time-container">
-                  <span className="time">{('0' + i).slice(-2)}:00</span>
-                </div>
-              </div>)
-              )
-            }
+            )}
           </div>
         </div>
-        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(
-          (val, i) => <Day key={val} day={i} />
-        )}
+        <div className="content">
+          <div className="hours-container">
+            {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,].map(
+              (val, i) => <div className="hour-container" key={i}>
+                <div className="hour" >{('0' + i).slice(-2) + ':00'}</div>
+              </div>
+            )}
+          </div>
+          <div className="days-container">
+            <div className="hour-separators-container">
+              {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,].map(
+                (val, i) => <div className="hour-separator" key={i}></div>
+              )}
+            </div>
+            <div className="gutter" />
+            <div className="days">
+              {[0, 0, 0, 0, 0, 0, 0,].map(
+                (val, i) => <Day key={i} day={i} />
+              )
+              }
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

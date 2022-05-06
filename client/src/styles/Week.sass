@@ -1,79 +1,86 @@
 $cell: 1px solid lightgray
-$gutter: 60px
 
 .week
+  display: flex
   width: 100%
   height: 100%
+
+.week-inner
+  display: flex
+  flex-grow: 1
+  align-self: stretch
+  margin: 0 24px 24px 12px
+  flex-flow: column nowrap
+
+.header
+  min-height: 58px
+  display: flex
+  margin-left: 44px
+  .day-names
+    display: flex
+    flex-grow: 1
+    .day-name-container
+      flex-shrink: 0
+      width: calc(100% / 7)
+      text-align: center
+      position: relative
+      .day-separator
+        position: absolute
+        border-left: $cell
+        height: 16px
+        bottom: 0
+
+.content
+  flex-grow: 1
+  display: flex
+  flex-direction: row
+
+.hours-container
   display: flex
   flex-direction: column
 
-  &__header, &__content
-    position: relative
-    display: flex
+.hour-container
+  width: 32px
+  flex-grow: 1
+  &:first-child
+    visibility: hidden
+  .hour
+    text-align: right
+    margin-top: -8px
+    margin-right: 4px
+    font-size: 12px
 
-  &__header
-    height: 64px
-    .shadow
-      // height: 1px
-      position: absolute
-      left: -24px
-      right: -48px
-      bottom: 0
-      box-shadow: 0 0 5px black
-      clip-path: inset(0px 0px -5px 0px)
-
-  &__content
-    height: 100%
-    overflow-x: auto
-    scrollbar-width: none
-    align-items: stretch
-
-.weekday
+.days-container
   position: relative
-  width: 100%
-  text-align: center
-  &__name-container
-    margin-top: 20px
-  &__separator
-    position: absolute
-    height: 16px
-    left: 0
-    bottom: 0
-    border-left: $cell
+  display: flex
+  flex-grow: 1
 
-.gutter
-  min-width: $gutter
-  height: 960px
+.days
+  flex-grow: 1
+  display: flex
 
-.hours
+.hour-separators-container
   position: absolute
   width: 100%
   height: 100%
   display: flex
   flex-direction: column
   justify-content: space-between
-  .hour
-    position: relative
-    min-height: 40px
-    width: 100%
-    &__separator
-      position: absolute
-      width: 100%
-      left: 54px
-      border-top: $cell
+  .hour-separator
+    flex-grow: 1
+    border-top: $cell
     &:first-child
       visibility: hidden
-    .time-container
-      width: 48px
-      margin-top: -12px
-      text-align: right
+
+.gutter
+  min-width: 12px
 
 .day
-  width: fit-content
-  height: 100%
-  border-left: $cell
-  z-index: 100
-  flex: 1 1
+  flex-shrink: 0
+  width: calc(100% / 7)
+  position: relative
 
 .events
+  position: relative
   height: 100%
+  border-left: $cell
