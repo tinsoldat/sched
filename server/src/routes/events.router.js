@@ -1,13 +1,12 @@
 const { Router } = require('express');
-const fetchWiki = require('./services/wikiwiki')
-const Event = require('./models/Event');
-const Liver = require('./models/Liver');
+const fetchWiki = require('../services/wikiwiki')
+const Event = require('../models/Event');
 
 const router = Router()
 
 //TODO validation middleware
-//GET events from=yyyy-mm-dd&to=yyyy-mm-dd&name=Full Name
-router.get('/events', (req, res) => {
+//GET api/events?from=yyyy-mm-dd&to=yyyy-mm-dd&name=Full Name
+router.get('/', (req, res) => {
   const { from, to, name } = req.query
 
   const regex = /^\d\d\d\d-\d\d-\d\d$/
@@ -25,22 +24,22 @@ router.get('/events', (req, res) => {
   })
 })
 //TODO POST add a new event
-router.get('/events/create', (req, res) => {
+router.get('/create', (req, res) => {
   res.json(req.query)
 })
 //POST update the event database
-router.get('/events/update', async (req, res) => {
+router.get('/update', async (req, res) => {
   const { events } = await fetchWiki(0, 7, 'past')
   await Event.insertMany(events)
   res.status(201).json(events)
   console.log('inserted', events.length, 'events');
 })
 //TODO POST update an event by id
-router.get('/events/update/:id', (req, res) => {
+router.get('/update/:id', (req, res) => {
   res.json(req.params)
 })
 //DELETE clear the collection
-router.get('/events/delete', async (req, res) => {
+router.get('/delete', async (req, res) => {
   await Event.deleteMany({})
   res.send('deleted')
 })

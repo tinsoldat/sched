@@ -2,7 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 
-const router = require('./routes.js')
+const eventsRouter = require('./routes/events.router.js')
+const liversRouter = require('./routes/livers.router')
 const fetchWiki = require('./services/wikiwiki.js')
 const Event = require('./models/Event')
 
@@ -13,7 +14,8 @@ const app = express()
 const PORT = process.env.PORT ?? 5000
 const DATABASE = process.env.DATABASE ?? 'mongodb://127.0.0.1:27017/test'
 
-app.use('/api/', router)
+app.use('/api/events/', eventsRouter)
+app.use('/api/livers/', liversRouter)
 
 const start = async () => {
   try {
