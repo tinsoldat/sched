@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const fetchWiki = require('../services/wikiwiki')
+const { fetchSchedule } = require('../services/wikiwiki')
 const Event = require('../models/Event');
 
 const router = Router()
@@ -29,7 +29,7 @@ router.get('/create', (req, res) => {
 })
 //POST update the event database
 router.get('/update', async (req, res) => {
-  const { events } = await fetchWiki(0, 7, 'past')
+  const { events } = await fetchSchedule(0, 7, 'past')
   await Event.insertMany(events)
   res.status(201).json(events)
   console.log('inserted', events.length, 'events');

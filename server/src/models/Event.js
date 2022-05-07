@@ -2,9 +2,10 @@ const { Schema, model } = require("mongoose")
 
 const schema = new Schema({
   date: Date,
-  feat: [
-    [String, String]
-  ],
+  feat: {
+    type: Map,
+    of: String
+  },
   description: String,
   note: String
 })

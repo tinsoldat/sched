@@ -19,11 +19,45 @@ const dayRegex = /(\d\d) (\d\d?), (\d{4}) (\d\d|？)時(\d\d|？)/
  * [4] - Platform
  * [5] - Note
  */
-const atRegex = /^(?:(.*?)(以外の|の)?(公式)?)((?:(?:文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?、?)+)(\(.+\))?/
+const atRegex = /^(?:(.*?)(以外の|の)?(公式)?)((?:(?:？|文化放送|bilibili|ツイキャス|YouTube|Twitch|Twitter Live|ニコニコ)(?:チャンネル|生放送)?、?)+)(\(.+\))?/
 const featRegex = /(.*)(?:\(|^)([^\(\)]+)(?:\)|$)/
 const LOCALE_OFFSET = new Date().getTimezoneOffset()
 const JST_OFFSET = -540 // 9 hours
 const OFFSET = JST_OFFSET - LOCALE_OFFSET
+
+const parseEvent = ({ date, feat, at, description, note }) => {
+  const day = date.match(dayRegex).map(val => parseInt(val))
+  date = new Date(day[3], day[2] - 1, day[1], day[4] || 0, day[5] + OFFSET || 0)
+
+  let [_input, who, incl, official, platform, atNote] = at.replace('チャンネル', '').match(atRegex) ?? [at, 'other']
+  if (platform && platform.charAt(platform.length - 1) === '、') platform = platform.slice(0, -1)
+  who = who?.split('、')
+  incl = incl && incl === 'の'
+  official = official || platform === 'ニコニコ生放送' || platform === '文化放送'
+
+  const isSolo = !who && !official
+  const atEvery = who.includes('両名') || who.includes('各々')
+
+  feat = feat.match(featRegex)[2].split('＆').reduce((acc, cur) => {
+
+    const isMe = who.includes(cur)
+
+    if (isSolo || atEvery) {
+      acc.push([cur, platform])
+    } else if (official) {
+      acc[0] = ['main', platform]
+      acc.push([cur, ''])
+    } else if (isMe ? incl : !incl) {
+      acc.push([cur, platform])
+    } else {
+      acc.push([cur, ''])
+    }
+
+    return acc
+  }, [])
+  console.log(at, '=>', feat);
+  return { date, feat, at, description, note }
+}
 
 const parseListItem = li => {
 
@@ -84,42 +118,49 @@ const fetchSchedule = async (offset = 0, days = 1, mode = 'past') => {
       unresolved.push(event.description)
       return false
     })
-    .map(({ date, feat, at, description, note }) => {
-      const day = date.match(dayRegex).map(val => parseInt(val))
-      date = new Date(day[3], day[2] - 1, day[1], day[4] || 0, day[5] + OFFSET || 0)
+    .map(parseEvent)
 
-      let [_input, who, incl, official, platform, atNote] = at.replace('チャンネル', '').match(atRegex) ?? [at, 'other']
-      incl = incl && incl === 'の'
-      if (platform?.charAt(platform?.length - 1) === '、') platform?.slice(0, -2)
+  console.log(unresolved, 'unable to parse events:', unresolved.length)
 
-      feat = feat.match(featRegex)[2].split('＆').reduce((acc, cur) => {
-
-        if (
-          (official === '公式' || platform === 'ニコニコ生放送' || platform === '文化放送')
-          && !acc[0]
-        ) {
-          acc.unshift(['main', platform])
-        } else if (acc[0] && acc[0][0] !== 'main' || !acc[0]) {
-          if (
-            (who.includes(cur) ? incl : !incl)
-            || (who === '両名' || who === '各々')
-          )
-            acc.push([cur, platform])
-          else
-            acc.push([cur, ''])
-        }
-        // !who || who === '各々' || who === '両名' || 
-        return acc
-      }, [])
-      console.log(feat, at);
-      return { date, feat, at, description, note }
-    })
-
-  // console.log(unresolved, 'unable to parse events:', unresolved.length)
-
-  // console.log(events);
   return { events, unresolved }
 }
 
+const fetchMembers = async () => {
+  // const URI = `https://wikiwiki.jp/nijisanji/配信ページ ジャンプリスト`
+  // console.log('GET ' + URI);
+  // const response = await fetch(URI)
+  // const body = await response.text()
+  // fs.writeFileSync('../../public/members.html', body, (err) => (console.log(err)))
+  const body = fs.readFileSync('./public/members.html').toString()
+  const $ = cheerio.load(body)
 
-module.exports = { fetchSchedule }
+  const livers = Object.values(Array.from($('#content img[src^="members_files/face"] + img.ext').map((i, val) => {
+    let [name, platform] = val.prev.attribs.title.split(' / ')
+    name = name.trim().replace(/\d$/, '')
+    platform = platform?.toLowerCase()
+      .replace("ツイキャス", 'twitcast')
+      .replace("ニコニコ動画", 'nicovideo')
+    let url = val.attribs['data-href']
+    return {
+      name,
+      platform,
+      url
+    }
+  })).reduce((acc, {
+    name,
+    platform,
+    url
+  }) => {
+    if (!acc[name]) acc[name] = {
+      urls: {}, name
+    }
+    if (!acc[name].urls[platform]) acc[name].urls[platform] = url
+    else acc[name].urls[platform + '2'] = url
+    return acc
+  }, {}))
+
+  return { livers }
+
+}
+
+module.exports = { fetchSchedule, fetchMembers }
