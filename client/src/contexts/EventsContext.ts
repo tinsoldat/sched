@@ -2,9 +2,13 @@ import { createContext } from "react";
 
 export interface Event {
   date: Date,
-  feat: [string, string][]
+  feat: Record<string, Record<string, string>>
   description: '',
   note: ''
+  urls: {
+    youtube: string
+  },
+  color: string
 }
 
 const defaultValue: Event[][] = []

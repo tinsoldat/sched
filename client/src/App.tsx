@@ -13,9 +13,9 @@ function App() {
   const [start] = useState(new Date('2022-04-25'))
   const [end] = useState(new Date('2022-05-01'))
 
-  const filter = useCallback((val: Event) => {
-    const isInDateRange = new Date(val.date) > start && new Date(val.date) < end
-    let isIn = !val.feat.every(participant => !filterOptions.has(participant[0]))
+  const filter = useCallback(({ date, feat }: Event) => {
+    const isInDateRange = new Date(date) > start && new Date(date) < end
+    let isIn = !Object.keys(feat).every(name => !filterOptions.has(name))
 
     return isInDateRange && isIn
   }, [filterOptions, end, start])
@@ -41,7 +41,7 @@ function App() {
 
   return (
     <div className="App">
-        <Navbar toggle={toggle} filterOptions={filterOptions} livers={livers} />
+      <Navbar toggle={toggle} filterOptions={filterOptions} livers={livers} />
       <EventsContext.Provider value={events as Event[][]}>
         <div className="main">
           {isLoading && <div className="spinner">Loading...</div>}

@@ -103,11 +103,13 @@ const get = async (offset = 0, days = 1, mode = 'past', url) => {
   return body
 }
 
-
+/**
+ * get schedule
+ */
 const fetchSchedule = async (offset = 0, days = 1, mode = 'past') => {
 
   // const body = await get(offset, days, mode)
-  // fs.writeFileSync('./public/body.html', body, (err) => (console.log(err)))
+  // fs.writeFileSync('./public/body.html', body))
   const body = fs.readFileSync('./public/body.html').toString()
 
   const unresolved = []
@@ -125,12 +127,17 @@ const fetchSchedule = async (offset = 0, days = 1, mode = 'past') => {
   return { events, unresolved }
 }
 
+/**
+ * get URLs with members channels
+ * selectors don't work because of lazy loading
+ * open and save with browser first
+ */
 const fetchMembers = async () => {
   // const URI = `https://wikiwiki.jp/nijisanji/配信ページ ジャンプリスト`
-  // console.log('GET ' + URI);
+  // console.log('fetching members page GET ' + URI);
   // const response = await fetch(URI)
   // const body = await response.text()
-  // fs.writeFileSync('../../public/members.html', body, (err) => (console.log(err)))
+  // fs.writeFileSync('../../public/members.html', body))
   const body = fs.readFileSync('./public/members.html').toString()
   const $ = cheerio.load(body)
 
@@ -162,5 +169,38 @@ const fetchMembers = async () => {
   return { livers }
 
 }
+/**
+ * Get hex colors for livers
+ * URL = https://wikiwiki.jp/nijisanji/カラーコードまとめ
+ */
+const fetchColors = async () => {
 
-module.exports = { fetchSchedule, fetchMembers }
+  const URI = `https://wikiwiki.jp/nijisanji/カラーコードまとめ`
+  console.log('fetching colors page GET ' + URI);
+  const response = await fetch(URI)
+  // const body = await response.text()
+  // fs.writeFileSync('./public/colors.html', body)
+  const body = fs.readFileSync('./public/colors.html').toString()
+  const $ = cheerio.load(body)
+
+  const colors = Array.from($('th + td + td + td + td').map((i, val) => {
+    let [name, ...rest] = Array.from(val.parent.children.map((val) => {
+      let res = val.children && val.children[0]?.data
+      if (res === '-') res = undefined
+      return res
+    }))
+
+    const [own, old, light, strong] = rest.map(val => {
+      if (typeof val === 'undefined' || /^#([0-9a-f]{3}){1,2}$/i.test(val)) return val
+      else return undefined
+    })
+    return { name, own, old, light, strong }
+  })).reduce((acc, { name, ...rest }) => {
+    acc[name] = { ...rest }
+    return acc
+  }, {})
+  
+  return { colors }
+}
+
+module.exports = { fetchSchedule, fetchMembers, fetchColors }

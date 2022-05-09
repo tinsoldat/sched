@@ -19,7 +19,7 @@ export const Event = ({ event }: { event: Model }) => {
           <div className="avatars-container">
             <img src={avatar} alt="avatar" className='avatar' />
           </div>
-          <div className="name">{feat[0][0]}</div>
+          <div className="name">{Object.keys(feat)}</div>
         </div>
         <div className="time">{time}</div>
       </div>

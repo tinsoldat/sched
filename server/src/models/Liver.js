@@ -5,7 +5,12 @@ const schema = new Schema({
     type: String,
     required: true
   },
-  color: String,
+  colors: {
+    own: String,
+    old: String,
+    light: String,
+    strong: String
+  },
   units: [String],
   description: String,
   urls: {
