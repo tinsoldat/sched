@@ -1,9 +1,10 @@
 import React from 'react'
-import { Event as Model } from '../contexts/EventsContext'
+import { IEvent } from '../contexts/EventsContext'
+import { LiversContext } from '../contexts/LiversContext'
 import '../styles/Event.sass'
-import avatar from '../images/avatar.png'
+//TODO add support for different density modes
 
-export const Event = ({ event }: { event: Model }) => {
+export const Event = ({ event }: { event: IEvent }) => {
   let { date, feat, description, note } = event
   date = new Date(date)
   const hours = date.getHours(), minutes = date.getMinutes()
@@ -12,20 +13,28 @@ export const Event = ({ event }: { event: Model }) => {
   //steps of 15 minutes, no 23hr+
   const top = Math.floor((minSinceMidnight) / 15) / 0.96 + '%'
   const time = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
+
+  const participants = Object.keys(feat)
+
   return (
-    <div className="event" style={{ top }}>
-      <div className="main-info">
-        <div className="liver-info">
-          <div className="avatars-container">
-            <img src={avatar} alt="avatar" className='avatar' />
+    <LiversContext.Consumer>
+      {(livers) => {
+        const color = livers.find(val => val.name === participants[0])?.color
+        return <div className="event" style={{ '--theme-color': color, top } as React.CSSProperties}>
+          <div className="main-info">
+            <div className="liver-info">
+              <div className="avatars-container">
+                {participants.map(name => <img src={`https://cdn.wikiwiki.jp/to/w/nijisanji/${name}/::ref/face.png`} alt={name} className='avatar' key={name} />)}
+              </div>
+              {participants.length === 1 ? <div className="name">{participants}</div> : ''}
+            </div>
+            <div className="description">
+              {description}
+            </div>
+            <div className="time">{time}</div>
           </div>
-          <div className="name">{Object.keys(feat)}</div>
         </div>
-        <div className="time">{time}</div>
-      </div>
-      <div className="description">
-        {description}
-      </div>
-    </div>
+      }}
+    </LiversContext.Consumer>
   )
 }

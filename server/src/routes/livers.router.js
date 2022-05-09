@@ -7,7 +7,7 @@ const router = Router()
 //GET api/livers/
 router.get('/', (req, res) => {
 
-  Liver.find({}, (err, livers) => {
+  Liver.find({ active: true }, 'name units color', (err, livers) => {
     res.json(livers)
   })
 })
@@ -24,7 +24,7 @@ router.get('/update/colors', async (req, res) => {
   await Liver.bulkWrite(Object.entries(colors).map(val => {
     const name = val[0]
     const colors = val[1]
-    return({
+    return ({
       updateOne: {
         filter: { name: name },
         update: { colors: colors }

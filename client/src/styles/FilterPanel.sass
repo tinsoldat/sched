@@ -1,37 +1,41 @@
-.filter-panel
+.filter
   position: absolute
-  // width: 600px
+  width: 100%
   height: 100%
-  margin-left: 60px
   left: 0
-  background-color: #e8e8e8e8
   z-index: 500
   transition: all 300ms
   opacity: 0
   transform: translateX(-100%)
   display: flex
   visibility: hidden
+  &-scrollable-area
+    overflow-y: auto
+    margin-left: 60px
+    background-color: #e8e8e8e8
+  &-padding
+    flex-grow: 1
   &.visible
     visibility: visible
     transform: none
     opacity: 1
-  &-inner
-    overflow-y: auto
-    margin: 24px 32px 0 24px
-    flex-grow: 1
 
 .filter-options
   overflow-y: auto
+  margin: 0 16px
+  padding-bottom: 240px
 
-.liver-name
-  display: flex
-  cursor: pointer
+
 
 .livers-group
-  // &:not(:last-child)::after
-  //   background: gray
-  margin-bottom: 32px
+  &:not(:last-child) header
+    content: ""
+    display: block
+    border-bottom: 1px solid lightgray
+    height: 0%
+    width: 90%
+
 .livers-group-inner
   display: grid
   grid-template-columns: repeat(3, 1fr)
-  grid-gap: 12px
+  gap: 12px 24px

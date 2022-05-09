@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export interface Event {
+export interface IEvent {
   date: Date,
   feat: Record<string, Record<string, string>>
   description: '',
@@ -11,6 +11,6 @@ export interface Event {
   color: string
 }
 
-const defaultValue: Event[][] = []
+const defaultValue: IEvent[][] = []
 
 export const EventsContext = createContext(defaultValue)

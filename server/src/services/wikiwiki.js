@@ -108,9 +108,9 @@ const get = async (offset = 0, days = 1, mode = 'past', url) => {
  */
 const fetchSchedule = async (offset = 0, days = 1, mode = 'past') => {
 
-  // const body = await get(offset, days, mode)
-  // fs.writeFileSync('./public/body.html', body))
-  const body = fs.readFileSync('./public/body.html').toString()
+  const body = await get(offset, days, mode)
+  fs.writeFileSync('./public/body.html', body)
+  // const body = fs.readFileSync('./public/body.html').toString()
 
   const unresolved = []
   const events = parseBody(body)

@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export interface Liver {
+export interface ILiver {
   name: string,
   avatar?: string,
   urls?: {
@@ -12,6 +12,6 @@ export interface Liver {
   units: [string]
 }
 
-const defaultValue: Liver[] = []
+const defaultValue: ILiver[] = []
 
 export const LiversContext = createContext(defaultValue)

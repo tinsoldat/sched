@@ -2,6 +2,12 @@ img
   width: 100%
   height: 100%
 
+h4
+  color: gray
+  font-size: 12px
+  text-align: right
+  margin: 12px 0 4px 0
+
 .icon
   width: 48px
   height: 48px
@@ -10,8 +16,30 @@ img
   border-radius: 50%
   cursor: pointer
 
+.liver-info
+  display: flex
+  flex-shrink: 0
+  cursor: pointer
+  border-radius: 8px
+  padding: 4px 4px
+  transition: background-color 200ms
+  &:hover, &.checked
+    background-color: var(--theme-color)
+  &:active
+    background-color: gray
+
 .avatar
   background-color: lightgray
+  width: 28px
+  height: 28px
+  border-radius: 100%
+  overflow: clip
+  user-select: none
+
+.name
+  margin: 4px 4px 0 4px
+  cursor: pointer
+  user-select: none
 
 .spinner, .error
   position: absolute

@@ -27,7 +27,7 @@ const schema = new Schema({
     weibo: String,
     
   },
-  debut: Date
+  active: Boolean
 })
 
 module.exports = model('Liver', schema)

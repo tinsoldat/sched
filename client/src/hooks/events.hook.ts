@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import { Event } from "../contexts/EventsContext";
+import { IEvent } from "../contexts/EventsContext";
 import { useFetch } from "./fetch.hook";
 
-export function useEvents(filter: (val: Event) => boolean, start: Date) {
-  const [events, setEvents] = useState<Event[][]>()
-  const { response, isLoading, error } = useFetch<Event[]>('api/events')
+export function useEvents(filter: (val: IEvent) => boolean, start: Date) {
+  const [events, setEvents] = useState<IEvent[][]>()
+  const { response, isLoading, error } = useFetch<IEvent[]>('api/events')
 
   useMemo(() => {
     if (isLoading) {
@@ -15,7 +15,7 @@ export function useEvents(filter: (val: Event) => boolean, start: Date) {
       const diff = Math.floor(Math.abs(new Date(val.date).valueOf() - start.valueOf()) / (1000 * 60 * 60 * 24))
       acc[diff].push(val)
       return acc
-    }, [[], [], [], [], [], [], []] as Event[][])
+    }, [[], [], [], [], [], [], []] as IEvent[][])
     setEvents(newEvents)
 
   }, [isLoading, filter, response, start])
