@@ -1,0 +1,75 @@
+@use './common.sass' as *;
+
+.navbar {
+  width: 60px;
+  height: 100%;
+  z-index: 100;
+
+  &__slide-menu {
+    width: calc(100vw - 60px);
+    height: 100%;
+    position: absolute;
+    margin-left: 60px;
+  }
+
+  &__toolbar {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: $dark;
+  }
+
+  &__filter {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__group {
+    margin-top: 12px;
+    display: flex;
+  }
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  &__icon-container {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 200ms;
+
+    &[pressed] {
+      background-color: $main;
+    }
+  }
+}
+
+.slide-menu {
+  display: flex;
+
+  &__content {
+    scrollbar-gutter: stable;
+    overflow-y: auto;
+    background-color: $main
+  }
+
+  &__padding {
+    flex-grow: 1;
+  }
+}
+
+.navbar [hidden] {
+  visibility: hidden;
+  transform: translateX(-100%);
+}

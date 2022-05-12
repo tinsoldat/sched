@@ -6,11 +6,10 @@ import { LiverButton } from './LiverButton'
 interface FilterPanelProps {
   toggle: (name: string) => boolean,
   filterOptions: Set<string>,
-  isActive: boolean
-  setIsActive: (isActive: boolean) => void
+  tab: string
 }
 //TODO close on click outside, filter by group, pin groups
-export const FilterPanel = ({ toggle, filterOptions, isActive, setIsActive }: FilterPanelProps) => {
+export const FilterPanel = ({ toggle, filterOptions, tab }: FilterPanelProps) => {
   const livers = useContext(LiversContext)
 
   const groupedLivers = useMemo(() => Object.entries(
@@ -22,30 +21,19 @@ export const FilterPanel = ({ toggle, filterOptions, isActive, setIsActive }: Fi
   ), [livers])
 
   return (
-    <div className={'filter ' + (isActive ? 'visible' : '')}>
-      <div className="filter-scrollable-area">
-        <div className="filter-options">
-          {groupedLivers.map(val => {
-            const unit = val[0]
-            const liversGroup = val[1]
-            return (<div className="livers-group" key={unit} data-group={unit}>
-              <h4>{unit.replace(/^_.+/, liversGroup.map(({ name }: ILiver) => name).join('、'))}</h4>
-              <div className="livers-group-inner">
-                {liversGroup.map(({ name, avatar, color }: ILiver) => {
-                  return <LiverButton name={name}
-                    avatar={avatar}
-                    color={color}
-                    toggle={toggle}
-                    isActive={filterOptions.has(name)}
-                    key={name}
-                  />
-                })}
-              </div>
-            </div>)
-          })}
+    <div className="filter">
+      {groupedLivers.map(([unitName, members]) => <>
+        <h3 className='secondary'>{unitName.replace(/^_.+/, members.map(({ name }: ILiver) => name).join('、'))}</h3>
+        <div className="livers-group" key={unitName} data-group={unitName}>
+          {members.map(({ name, avatar, color }: ILiver) => <LiverButton name={name}
+            avatar={avatar}
+            color={color}
+            toggle={toggle}
+            isActive={filterOptions.has(name)}
+            key={name}
+          />)}
         </div>
-      </div>
-      <div className="filter-padding" onClick={() => setIsActive(!isActive)}></div>
+      </>)}
     </div>
   )
 }

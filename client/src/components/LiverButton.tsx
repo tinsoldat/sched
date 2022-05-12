@@ -12,7 +12,7 @@ export const LiverButton = ({
   return (
     <div className={"liver-info " + (isActive ? 'checked' : '')}
       title={name}
-      style={{ '--theme-color': color + '88' } as React.CSSProperties}
+      style={{ '--theme-color': color } as React.CSSProperties}
       onClick={() => { toggle(name) }}
     >
       <div className="avatar">

@@ -1,20 +1,29 @@
+$main: var(--color-main)
+$light: var(--color-light)
+$dark: var(--color-dark)
+$regular: var(--color-regular)
+
+:root
+  --color-main: #2A4B70
+  --color-light: #7E9BBD
+  --color-dark: #17293D
+  --color-regular: #467DBD
+
 img
   width: 100%
   height: 100%
 
-h4
-  color: gray
+.secondary
+  color: $light
+  font-weight: bold
   font-size: 12px
   text-align: right
   margin: 12px 0 4px 0
 
-.icon
-  width: 48px
-  height: 48px
-  background: lightgray
-  margin-bottom: 12px
-  border-radius: 50%
-  cursor: pointer
+.clickable
+  transition: background-color 200ms
+  &:active
+    background-color: gray !important
 
 .liver-info
   display: flex
@@ -40,6 +49,7 @@ h4
   margin: 4px 4px 0 4px
   cursor: pointer
   user-select: none
+  color: lightgray
 
 .spinner, .error
   position: absolute
