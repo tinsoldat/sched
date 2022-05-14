@@ -1,20 +1,22 @@
 import React from 'react'
-import { EventsContext } from '../contexts/EventsContext'
+import { IEvent } from '../contexts/EventsContext'
 import { Event } from './Event'
 
-export const Day = ({ day }: { day: number }) => {
+export const Day = ({ day, events, filter }: { day: number, events: IEvent[], filter: { livers: Set<string> } }) => {
+  const now = new Date()
+  now.setDate(now.getDate() - now.getDay() + day)
+  const today = now.getDate()
   return (
     <div className="day">
-      <EventsContext.Consumer>
-        {value => {
-          return <div className="events">
-              {value?.[day].map((value, i) => {
-                return <Event key={i} event={value} />
-                // return <div>{value.feat[0][0]}</div>
-              })}
-            </div>
-        }}
-      </EventsContext.Consumer>
+      <div className="events">
+        {events.filter(val => {
+          const isToday = val.date.getDate() === today;
+          const isFiltered = !Object.keys(val.feat).every(name => !filter.livers.has(name))
+          return isToday && isFiltered
+        }).map((val, i) =>
+          <Event key={i} event={val} />
+        )}
+      </div>
     </div>
   )
 }

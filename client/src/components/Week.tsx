@@ -1,8 +1,14 @@
 import React from 'react'
 import { Day } from './Day'
 import '../styles/Week.sass'
+import { IEvent } from '../contexts/EventsContext'
 
-export const Week = () => {
+interface WeekProps {
+  events: IEvent[],
+  filter: { livers: Set<string> }
+}
+
+export const Week = ({ events, filter }: WeekProps) => {
 
   return (
     <div className="week">
@@ -34,7 +40,7 @@ export const Week = () => {
             <div className="gutter" />
             <div className="days">
               {[0, 0, 0, 0, 0, 0, 0,].map(
-                (val, i) => <Day key={i} day={i} />
+                (val, i) => <Day key={i} day={i} events={events} filter={filter} />
               )
               }
             </div>

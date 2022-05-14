@@ -5,19 +5,19 @@ import settingsIcon from '../images/settings.svg'
 import { FilterPanel } from './FilterPanel'
 
 type NavbarProps = {
-  toggle: (name: string) => boolean,
-  filterOptions: Set<string>,
+  filter: { livers: Set<string> },
+  setFilter: (filter: { livers: Set<string> }) => void
 }
 //TODO interactions with toolbar
-export const Navbar = ({ toggle, filterOptions }: NavbarProps) => {
+export const Navbar = ({ filter, setFilter }: NavbarProps) => {
   const [tab, setTab] = useState('')
 
   return (
     <div className="navbar">
-      <div className="navbar__slide-menu slide-menu" >
-        <div className="slide-menu__content" {...(tab === '' && { hidden: true })}>
+      <div className="navbar__slide-menu slide-menu" {...(tab === '' && { hidden: true })}>
+        <div className="slide-menu__content">
           <Tab tab={tab} name='filter'>
-            <FilterPanel filterOptions={filterOptions} toggle={toggle} tab={tab} />
+            <FilterPanel filter={filter} setFilter={setFilter} />
           </Tab>
           <Tab tab={tab} name='settings'>
             <Settings />

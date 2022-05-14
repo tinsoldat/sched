@@ -4,12 +4,48 @@ import { ILiver, LiversContext } from '../contexts/LiversContext'
 import { LiverButton } from './LiverButton'
 
 interface FilterPanelProps {
-  toggle: (name: string) => boolean,
-  filterOptions: Set<string>,
-  tab: string
+  filter: {
+    livers: Set<string>
+  },
+  setFilter: (filter: { livers: Set<string> }) => void
 }
-//TODO close on click outside, filter by group, pin groups
-export const FilterPanel = ({ toggle, filterOptions, tab }: FilterPanelProps) => {
+
+const Unit = ({ value: [unitName, members], filter, setFilter }: { value: [string, ILiver[]] } & FilterPanelProps) => {
+
+  const names = members.map(val => val.name)
+  const isActive = !names.every(name => !filter.livers.has(name))
+
+  const clickHandler = () => {
+    if (isActive) {
+      const livers = new Set(filter.livers)
+      names.forEach(name => livers.delete(name))
+      setFilter({ ...filter, livers })
+    } else {
+      setFilter({ ...filter, livers: new Set([...filter.livers, ...names]) })
+    }
+  }
+
+  return (
+    <div className="livers-group-wrapper" key={unitName}>
+      <h3 className={'secondary' + (isActive ? ' active' : '')}
+        onClick={clickHandler}
+      >
+        {unitName.replace(/^_.+/, members.map(({ name }: ILiver) => name).join('、'))}
+      </h3>
+      <div className="livers-group" key={unitName} data-group={unitName}>
+        {members.map((member: ILiver) => <LiverButton
+          liver={member}
+          filter={filter}
+          setFilter={setFilter}
+          key={member.name}
+        />)}
+      </div>
+    </div>
+  )
+}
+
+//TODO pin groups
+export const FilterPanel = ({ filter, setFilter }: FilterPanelProps) => {
   const livers = useContext(LiversContext)
 
   const groupedLivers = useMemo(() => Object.entries(
@@ -22,18 +58,7 @@ export const FilterPanel = ({ toggle, filterOptions, tab }: FilterPanelProps) =>
 
   return (
     <div className="filter">
-      {groupedLivers.map(([unitName, members]) => <>
-        <h3 className='secondary'>{unitName.replace(/^_.+/, members.map(({ name }: ILiver) => name).join('、'))}</h3>
-        <div className="livers-group" key={unitName} data-group={unitName}>
-          {members.map(({ name, avatar, color }: ILiver) => <LiverButton name={name}
-            avatar={avatar}
-            color={color}
-            toggle={toggle}
-            isActive={filterOptions.has(name)}
-            key={name}
-          />)}
-        </div>
-      </>)}
+      {groupedLivers.map(val => <Unit value={val} filter={filter} setFilter={setFilter} />)}
     </div>
   )
 }

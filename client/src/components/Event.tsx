@@ -24,7 +24,7 @@ export const Event = ({ event }: { event: IEvent }) => {
           <div className="main-info">
             <div className="liver-info">
               <div className="avatars-container">
-                {participants.map(name => <img src={`https://cdn.wikiwiki.jp/to/w/nijisanji/${name}/::ref/face.png`} alt={name} className='avatar' key={name} />)}
+                {participants.map(name => <img src={livers.map(val => val.name).includes(name) ? `https://cdn.wikiwiki.jp/to/w/nijisanji/${name}/::ref/face.png` : ''} alt={name} className='avatar' key={name} />)}
               </div>
               {participants.length === 1 ? <div className="name">{participants}</div> : ''}
             </div>
