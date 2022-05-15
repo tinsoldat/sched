@@ -20,6 +20,8 @@ export const LiverButton = ({ liver: { name, color }, filter, setFilter }: {
         else {
           livers.add(name)
         }
+        console.log(livers);
+        
         setFilter({ ...filter, livers })
       }}
     >

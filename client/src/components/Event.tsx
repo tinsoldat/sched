@@ -5,8 +5,7 @@ import '../styles/Event.sass'
 //TODO add support for different density modes
 
 export const Event = ({ event }: { event: IEvent }) => {
-  let { date, feat, description, note } = event
-  date = new Date(date)
+  let { date, feat, description } = event
   const hours = date.getHours(), minutes = date.getMinutes()
   let minSinceMidnight = hours * 60 + minutes
   if (minSinceMidnight > 1380) minSinceMidnight -= minSinceMidnight % 1380
@@ -24,7 +23,14 @@ export const Event = ({ event }: { event: IEvent }) => {
           <div className="main-info">
             <div className="liver-info">
               <div className="avatars-container">
-                {participants.map(name => <img src={livers.map(val => val.name).includes(name) ? `https://cdn.wikiwiki.jp/to/w/nijisanji/${name}/::ref/face.png` : ''} alt={name} className='avatar' key={name} />)}
+                {participants.map(
+                  name => <img className='avatar' key={name}
+                    src={
+                      livers.map(val => val.name).includes(name)
+                        ? `https://cdn.wikiwiki.jp/to/w/nijisanji/${name}/::ref/face.png`
+                        : ''
+                    } alt={name} />
+                )}
               </div>
               {participants.length === 1 ? <div className="name">{participants}</div> : ''}
             </div>

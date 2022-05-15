@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Day } from './Day'
 import '../styles/Week.sass'
 import { IEvent } from '../contexts/EventsContext'
@@ -10,12 +10,30 @@ interface WeekProps {
 
 export const Week = ({ events, filter }: WeekProps) => {
 
+  const groupedEvents = useMemo(() => {
+    const now = new Date()
+    now.setDate(now.getDate() - now.getDay() - 10)
+    return events.reduce((acc, val) => {
+        
+      const day = val.date.getDate() - now.getDate()
+      if (day > 0 && day < 7) {
+        if (!acc[day]) acc[day] = []
+        acc[day].push(val)
+      }
+  
+      return acc
+    }, new Array<IEvent[]>(7))
+  }, [events])
+  
+
+  
+
   return (
     <div className="week">
       <div className="week-inner">
         <div className="header">
           <div className="day-names">
-            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(
+            {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(
               (val) => <div className="day-name-container" key={val}>
                 <span className="day-name">{val}</span>
                 <div className="day-separator"></div>
@@ -39,8 +57,8 @@ export const Week = ({ events, filter }: WeekProps) => {
             </div>
             <div className="gutter" />
             <div className="days">
-              {[0, 0, 0, 0, 0, 0, 0,].map(
-                (val, i) => <Day key={i} day={i} events={events} filter={filter} />
+              {groupedEvents.map(
+                (val, i) => <Day key={i} day={i} events={val} filter={filter} />
               )
               }
             </div>

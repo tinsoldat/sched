@@ -58,7 +58,7 @@ export const FilterPanel = ({ filter, setFilter }: FilterPanelProps) => {
 
   return (
     <div className="filter">
-      {groupedLivers.map(val => <Unit value={val} filter={filter} setFilter={setFilter} />)}
+      {groupedLivers.map(val => <Unit key={val[0]} value={val} filter={filter} setFilter={setFilter} />)}
     </div>
   )
 }
