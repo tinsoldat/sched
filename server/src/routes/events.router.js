@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
   const hasTo = regex.test(to)
   const query = Event.find()
   if (hasFrom || hasTo) {
-    if (hasFrom) query.find({ date : { $gte: new Date(from) } })
+    if (hasFrom) query.find({ date: { $gte: new Date(from) } })
     if (hasTo) query.find({ date: { $lt: new Date(to) } })
   }
   if (name) query.find({ feat: { $elemMatch: { $elemMatch: { $in: [name] } } } })
@@ -29,7 +29,9 @@ router.get('/create', (req, res) => {
 })
 //POST update the event database
 router.get('/update', async (req, res) => {
-  const { events } = await fetchSchedule(0, 7, 'past')
+  const { events: future } = await fetchSchedule(0, 7, 'future')
+  const { events: past } = await fetchSchedule(0, 7, 'past')
+  const events = past.concat(future)
   await Event.insertMany(events)
   res.status(201).json(events)
   console.log('inserted', events.length, 'events');

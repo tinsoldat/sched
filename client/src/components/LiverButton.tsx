@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ILiver } from '../contexts/LiversContext'
-//FIXME proper avatar sources, add pin, add square/round avatars
+//FIXME proper avatar sources, add pinning to toolbar
 export const LiverButton = ({ liver: { name, color }, filter, setFilter }: {
   liver: ILiver,
   filter: { livers: Set<string> },

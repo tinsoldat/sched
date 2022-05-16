@@ -29,7 +29,7 @@
   }
 
   &__group {
-    margin-top: 12px;
+    margin: 12px 0;
     display: flex;
   }
 
@@ -58,6 +58,10 @@
 .slide-menu {
   display: flex;
 
+  &__tab {
+    margin: 40px 16px 240px 16px
+  }
+
   &__content {
     scrollbar-gutter: stable;
     overflow-y: auto;
@@ -72,4 +76,22 @@
 .navbar [hidden] {
   visibility: hidden;
   transform: translateX(-100%);
+}
+
+.settings {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__item {
+    background-color: $dark;
+  }
+
+  &__button {
+    color: #fff;
+    width: 100%;
+    padding: 4px 0;
+    font-size: 20px;
+  }
 }

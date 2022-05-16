@@ -8,7 +8,7 @@ type NavbarProps = {
   filter: { livers: Set<string> },
   setFilter: (filter: { livers: Set<string> }) => void
 }
-//TODO interactions with toolbar
+//TODO pinning to toolbar
 export const Navbar = ({ filter, setFilter }: NavbarProps) => {
   const [tab, setTab] = useState('')
 
@@ -74,7 +74,27 @@ const Tab = ({ children, name, tab }: { children: React.ReactNode, name: string,
 }
 
 const Settings = () => {
-  return <div className="settings">
-    Settings
-  </div>
+
+
+
+  return (
+    <div className="settings">
+      <div className="settings__item">
+        <button className='settings__button clickable'
+          onClick={() => {
+            fetch('/api/events/update')
+          }}>
+          Update events
+        </button>
+      </div>
+      <div className="settings__item">
+        <button className='settings__button clickable'
+          onClick={() => {
+            fetch('/api/events/delete')
+          }}>
+          Clear events
+        </button>
+      </div>
+    </div>
+  )
 }

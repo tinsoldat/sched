@@ -55,7 +55,6 @@ const parseEvent = ({ date, feat, at, description, note }) => {
 
     return acc
   }, [])
-  console.log(at, '=>', feat);
   return { date, feat, at, description, note }
 }
 
@@ -95,7 +94,7 @@ const parseBody = body => {
 
 }
 
-const get = async (offset = 0, days = 1, mode = 'past', url) => {
+const get = async (offset = 0, days = 7, mode = 'future', url) => {
   const URI = `https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=${offset}*${days}&mode=${mode}`
   console.log('GET ' + URI);
   const response = await fetch(URI)

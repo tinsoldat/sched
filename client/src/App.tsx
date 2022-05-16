@@ -7,7 +7,7 @@ import { IEvent } from './contexts/EventsContext'
 import { useFetch } from './hooks/fetch.hook'
 import { ILiver, LiversContext } from './contexts/LiversContext'
 import useLocalStorage from './hooks/localStorage.hook'
-//TODO choose current week
+
 function App() {
   const [theme, setTheme] = useState('auto')
   const [language, setLanguage] = useState('english')
@@ -18,6 +18,8 @@ function App() {
     })
   const { response: livers } = useFetch<ILiver[]>('api/livers')
   const { response: events, isLoading, error } = useFetch<IEvent[]>('api/events')
+  const date = new Date()
+  date.setDate(date.getDate() - date.getDay())
 
   events?.forEach(val => val.date = new Date(val.date))
 
@@ -28,7 +30,7 @@ function App() {
         <div className="main">
           {isLoading && <div className="spinner">Loading...</div>}
           {error && <div className="error">{error.message}</div>}
-          {<Week events={events || []} filter={filter} />}
+          {<Week events={events || []} filter={filter} date={date} />}
         </div>
       </LiversContext.Provider>
     </div>

@@ -26,13 +26,13 @@ const Unit = ({ value: [unitName, members], filter, setFilter }: { value: [strin
   }
 
   return (
-    <div className="livers-group-wrapper" key={unitName}>
+    <div className="filter__groups-container" key={unitName}>
       <h3 className={'secondary' + (isActive ? ' active' : '')}
         onClick={clickHandler}
       >
         {unitName.replace(/^_.+/, members.map(({ name }: ILiver) => name).join('、'))}
       </h3>
-      <div className="livers-group" key={unitName} data-group={unitName}>
+      <div className="filter__group" key={unitName} data-group={unitName}>
         {members.map((member: ILiver) => <LiverButton
           liver={member}
           filter={filter}

@@ -2,11 +2,9 @@ import React from 'react'
 import { IEvent } from '../contexts/EventsContext'
 import { Event } from './Event'
 
-export const Day = ({ day, events, filter }: { day: number, events: IEvent[], filter: { livers: Set<string> } }) => {
+export const Day = ({ date, events, filter }: { date: number, events: IEvent[], filter: { livers: Set<string> } }) => {
   const now = new Date()
-  now.setDate(now.getDate() - now.getDay() + day - 10)
-  const today = now.getDate()
-  
+
   return (
     <div className="day">
       <div className="events">
@@ -18,6 +16,7 @@ export const Day = ({ day, events, filter }: { day: number, events: IEvent[], fi
           <Event key={i} event={val} />
         )}
       </div>
+      {now.getDate() === date ? <div className="time-pointer" style={{ top: (now.getHours() * 60 + now.getMinutes()) * 0.0694444 + '%' }} /> : ''}
     </div>
   )
 }
