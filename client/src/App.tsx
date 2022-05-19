@@ -11,15 +11,18 @@ import useLocalStorage from './hooks/localStorage.hook'
 function App() {
   const [theme, setTheme] = useState('auto')
   const [language, setLanguage] = useState('english')
-  const [filter, setFilter] = useLocalStorage('filter', { livers: new Set<string>() },
+  const [filter, setFilter] = useLocalStorage<{ livers: Set<string> }>('filter', { livers: new Set() },
     {
       replacer: (_key, value) => value instanceof Set ? [...value] : value,
       reviver: (key, value) => key === 'livers' ? new Set(value) : value
     })
   const { response: livers } = useFetch<ILiver[]>('api/livers')
   const { response: events, isLoading, error } = useFetch<IEvent[]>('api/events')
-  const date = new Date()
-  date.setDate(date.getDate() - date.getDay())
+  const [date, setDate] = useState(() => {
+    const date = new Date()
+    date.setDate(date.getDate() - date.getDay())
+    return date
+  })
 
   events?.forEach(val => val.date = new Date(val.date))
 

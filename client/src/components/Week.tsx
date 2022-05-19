@@ -9,22 +9,7 @@ interface WeekProps {
   date: Date
 }
 
-export const Week = ({ events, filter, date }: WeekProps) => {
-
-  const groupedEvents = useMemo(() => {
-    const now = new Date()
-    now.setDate(now.getDate() - now.getDay())
-    return events.reduce((acc, val) => {
-
-      const day = val.date.getDate() - now.getDate()
-      if (day > 0 && day < 7) {
-        if (!acc[day]) acc[day] = []
-        acc[day].push(val)
-      }
-
-      return acc
-    }, new Array<IEvent[]>([], [], [], [], [], [], []))
-  }, [events])
+export const Week = ({ events, filter, date }: WeekProps) => {  
 
   return (
     <div className="week">
@@ -55,8 +40,8 @@ export const Week = ({ events, filter, date }: WeekProps) => {
             </div>
             <div className="gutter" />
             <div className="days">
-              {groupedEvents.map(
-                (val, i) => <Day key={i} date={date.getDate() + i} events={val} filter={filter} />
+              {[0, 0, 0, 0, 0, 0, 0].map(
+                (_val, i) => <Day key={i} date={date.getDate() + i} events={events} filter={filter} />
               )
               }
             </div>

@@ -21,7 +21,7 @@ export const Event = ({ event }: { event: IEvent }) => {
         const color = livers.find(val => val.name === participants[0])?.color
         return <div className="event" style={{ '--theme-color': color, top } as React.CSSProperties}>
           <div className="main-info">
-            <div className="liver-info">
+            <div className="liver">
               <div className="avatars-container">
                 {participants.map(
                   name => <img className='avatar' key={name}

@@ -28,7 +28,7 @@ router.get('/create', (req, res) => {
   res.json(req.query)
 })
 //POST update the event database
-router.get('/update', async (req, res) => {
+router.post('/update', async (req, res) => {
   const { events: future } = await fetchSchedule(0, 7, 'future')
   const { events: past } = await fetchSchedule(0, 7, 'past')
   const events = past.concat(future)
@@ -41,7 +41,7 @@ router.get('/update/:id', (req, res) => {
   res.json(req.params)
 })
 //DELETE clear the collection
-router.get('/delete', async (req, res) => {
+router.delete('/delete', async (req, res) => {
   await Event.deleteMany({})
   res.send('deleted')
 })

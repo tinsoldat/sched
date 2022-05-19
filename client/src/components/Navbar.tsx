@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import '../styles/Navbar.scss'
 import filterIcon from '../images/filter.svg'
 import settingsIcon from '../images/settings.svg'
-import { FilterPanel } from './FilterPanel'
+import { Filter } from './Filter'
+import Settings from './Settings'
 
 type NavbarProps = {
   filter: { livers: Set<string> },
@@ -17,7 +18,7 @@ export const Navbar = ({ filter, setFilter }: NavbarProps) => {
       <div className="navbar__slide-menu slide-menu" {...(tab === '' && { hidden: true })}>
         <div className="slide-menu__content">
           <Tab tab={tab} name='filter'>
-            <FilterPanel filter={filter} setFilter={setFilter} />
+            <Filter filter={filter} setFilter={setFilter} />
           </Tab>
           <Tab tab={tab} name='settings'>
             <Settings />
@@ -52,7 +53,7 @@ export const Navbar = ({ filter, setFilter }: NavbarProps) => {
 
 const Button = ({ type, onClick, icon, isPressed }: { type?: string, onClick?: () => void, icon: string, isPressed?: boolean }) => {
   return (
-    <button className={type + '__icon-container clickable'}
+    <button className={type + '__icon-container btn'}
       onClick={() => onClick && onClick()}
       {...(isPressed && { pressed: '' })}
     >
@@ -73,28 +74,3 @@ const Tab = ({ children, name, tab }: { children: React.ReactNode, name: string,
   </div>
 }
 
-const Settings = () => {
-
-
-
-  return (
-    <div className="settings">
-      <div className="settings__item">
-        <button className='settings__button clickable'
-          onClick={() => {
-            fetch('/api/events/update')
-          }}>
-          Update events
-        </button>
-      </div>
-      <div className="settings__item">
-        <button className='settings__button clickable'
-          onClick={() => {
-            fetch('/api/events/delete')
-          }}>
-          Clear events
-        </button>
-      </div>
-    </div>
-  )
-}

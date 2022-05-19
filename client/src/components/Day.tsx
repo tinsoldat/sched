@@ -2,17 +2,25 @@ import React from 'react'
 import { IEvent } from '../contexts/EventsContext'
 import { Event } from './Event'
 
-export const Day = ({ date, events, filter }: { date: number, events: IEvent[], filter: { livers: Set<string> } }) => {
+interface DayProps {
+  date: number,
+  events: IEvent[],
+  filter: { livers: Set<string> }
+}
+
+export const Day = ({ date, events, filter }: DayProps) => {
   const now = new Date()
+
+  const today = events.filter(val => {
+    const isToday = val.date.getDate() === date
+    const isFiltered = !Object.keys(val.feat).every(name => !filter.livers.has(name))
+    return isFiltered && isToday
+  })
 
   return (
     <div className="day">
       <div className="events">
-        {events.filter(val => {
-          const isFiltered = !Object.keys(val.feat).every(name => !filter.livers.has(name))
-          return isFiltered
-        })
-        .map((val, i) =>
+        {today.map((val, i) =>
           <Event key={i} event={val} />
         )}
       </div>

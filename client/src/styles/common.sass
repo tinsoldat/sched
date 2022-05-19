@@ -17,37 +17,30 @@ img
   &.active
     text-decoration: underline dashed
 
-.clickable
-  cursor: pointer
-  transition: background-color 200ms
-  &:active
-    background-color: gray !important
-
-.liver-info
+.liver
   display: flex
   flex-shrink: 0
-  cursor: pointer
-  border-radius: 8px
   padding: 4px 4px
+  &__avatar, .avatar
+    background-color: lightgray
+    width: 28px
+    height: 28px
+    border-radius: 100%
+    overflow: clip
+    user-select: none
+  &__name, .name
+    margin: 4px 4px 0 4px
+    cursor: pointer
+    user-select: none
+    color: lightgray
+
+.btn
   transition: background-color 200ms
+  cursor: pointer
   &:hover, &.checked
     background-color: var(--theme-color)
   &:active
-    background-color: gray
-
-.avatar
-  background-color: lightgray
-  width: 28px
-  height: 28px
-  border-radius: 100%
-  overflow: clip
-  user-select: none
-
-.name
-  margin: 4px 4px 0 4px
-  cursor: pointer
-  user-select: none
-  color: lightgray
+    background-color: #0008
 
 .spinner, .error
   position: absolute
