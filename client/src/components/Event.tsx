@@ -1,7 +1,7 @@
 import React from 'react'
 import { IEvent } from '../contexts/EventsContext'
-import { LiversContext } from '../contexts/LiversContext'
-import '../styles/Event.sass'
+import { ILiver, LiversContext } from '../contexts/LiversContext'
+import '../styles/Event.scss'
 //TODO add support for different density modes
 
 export const Event = ({ event }: { event: IEvent }) => {
@@ -13,31 +13,54 @@ export const Event = ({ event }: { event: IEvent }) => {
   const top = Math.floor((minSinceMidnight) / 15) / 0.96 + '%'
   const time = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
 
-  const participants = Object.keys(feat)
-
+  const featNames = Object.keys(feat)
   return (
     <LiversContext.Consumer>
       {(livers) => {
-        const color = livers.find(val => val.name === participants[0])?.color
-        return <div className="event" style={{ '--theme-color': color, top } as React.CSSProperties}>
-          <div className="main-info">
-            <div className="liver">
-              <div className="avatars-container">
-                {participants.map(
-                  name => <img className='avatar' key={name}
-                    src={
-                      livers.map(val => val.name).includes(name)
-                        ? `https://cdn.wikiwiki.jp/to/w/nijisanji/${name}/::ref/face.png`
-                        : ''
-                    } alt={name} />
-                )}
+        const participants = featNames.map(name => livers.find(liver => liver.name === name)).filter(liver => liver) as ILiver[]
+        const { name, avatar, color } = participants[0]
+        let bgCounter = 4
+
+        return <div
+          className="event"
+          style={{
+            top,
+            // backgroundImage: 'linear-gradient(#0005, #0005),repeating-linear-gradient(to right,' +
+            //   participants.map(({ color }) => {
+            //     return color + ' ' + bgCounter + 'px,' + color + ' ' + (bgCounter += 28) + 'px'
+            //   }).join(',')
+            //   + ')'
+          } as React.CSSProperties}
+        >
+          <div className="event__avatars">
+            {participants.map(({ name, avatar, color }) =>
+              <div className="event__avatar-container"
+                style={{ '--theme-color': color } as React.CSSProperties}
+              >
+                <img
+                  className='event__avatar avatar'
+                  key={name}
+                  src={`https://cdn.wikiwiki.jp/to/w/nijisanji/${name}/::ref/face.png`}
+                  alt={name}
+                  draggable="false"
+                />
               </div>
-              {participants.length === 1 ? <div className="name">{participants}</div> : ''}
-            </div>
-            <div className="description">
+            )}
+          </div>
+          {participants.length === 1
+            &&
+            <span className="event__name">
+              {name}
+            </span>
+          }
+          {description
+            &&
+            <div className="event__description">
               {description}
             </div>
-            <div className="time">{time}</div>
+          }
+          <div className="event__time-container">
+            <span className="event__time">{time}</span>
           </div>
         </div>
       }}
