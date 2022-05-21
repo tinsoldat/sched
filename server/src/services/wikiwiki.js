@@ -84,6 +84,7 @@ const parseBody = body => {
   $('.minicalendar_viewer').each((i, calendar) => {
 
     const h3 = $(calendar).prev().text()
+    console.log(i);
 
     $('.list1 > li', calendar).each((j, li) => {
       events.push(h3 + ' ' + $($(li).text()).text())
@@ -107,7 +108,9 @@ const get = async (offset = 0, days = 7, mode = 'future', url) => {
  */
 const fetchSchedule = async (offset = 0, days = 1, mode = 'past') => {
 
-  const body = await get(offset, days, mode)
+  // const body = await get(offset, days, mode)
+  // fs.writeFileSync('./server/public/temp.html, body)
+  const body = fs.readFileSync('./server/public/temp.html').toString()
 
   const unresolved = []
   const events = parseBody(body)

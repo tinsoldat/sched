@@ -4,13 +4,14 @@ import { ILiver, LiversContext } from '../contexts/LiversContext'
 import '../styles/Event.scss'
 //TODO add support for different density modes
 
-export const Event = ({ event }: { event: IEvent }) => {
-  let { date, feat, description } = event
+export const Event = ({ event }: { event: IEvent & { pos: { col: number, cols: number } } }) => {
+  let { date, feat, description, pos } = event
   const hours = date.getHours(), minutes = date.getMinutes()
   let minSinceMidnight = hours * 60 + minutes
   if (minSinceMidnight > 1380) minSinceMidnight -= minSinceMidnight % 1380
   //steps of 15 minutes, no 23hr+
   const top = Math.floor((minSinceMidnight) / 15) / 0.96 + '%'
+  // const top = minSinceMidnight / 14.40 + '%'
   const time = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
 
   const featNames = Object.keys(feat)
@@ -23,15 +24,9 @@ export const Event = ({ event }: { event: IEvent }) => {
 
         return <div
           className="event"
-          style={{
-            top,
-            // backgroundImage: 'linear-gradient(#0005, #0005),repeating-linear-gradient(to right,' +
-            //   participants.map(({ color }) => {
-            //     return color + ' ' + bgCounter + 'px,' + color + ' ' + (bgCounter += 28) + 'px'
-            //   }).join(',')
-            //   + ')'
-          } as React.CSSProperties}
+          style={{ top, left: ((pos.col - 1) / pos.cols * 100 + '%'), width: 'calc(' + ((1 / pos.cols * 100 + '% - 1px)')) } as React.CSSProperties}
         >
+          {pos?.col}/{pos?.cols}
           <div className="event__avatars">
             {participants.map(({ name, avatar, color }) =>
               <div className="event__avatar-container"

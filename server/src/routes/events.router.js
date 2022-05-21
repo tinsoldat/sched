@@ -29,7 +29,7 @@ router.get('/create', (req, res) => {
 })
 //POST update the event database
 router.post('/update', async (req, res) => {
-  const { events: future } = await fetchSchedule(0, 7, 'future')
+  const { events: future } = await fetchSchedule(1, 6, 'future')
   const { events: past } = await fetchSchedule(0, 7, 'past')
   const events = past.concat(future)
   await Event.insertMany(events)
@@ -44,6 +44,7 @@ router.get('/update/:id', (req, res) => {
 router.delete('/delete', async (req, res) => {
   await Event.deleteMany({})
   res.send('deleted')
+  console.log('events cleared');
 })
 
 module.exports = router
