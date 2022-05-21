@@ -29,9 +29,7 @@ router.get('/create', (req, res) => {
 })
 //POST update the event database
 router.post('/update', async (req, res) => {
-  const { events: future } = await fetchSchedule(1, 6, 'future')
-  const { events: past } = await fetchSchedule(0, 7, 'past')
-  const events = past.concat(future)
+  const { events } = await fetchSchedule()
   await Event.insertMany(events)
   res.status(201).json(events)
   console.log('inserted', events.length, 'events');

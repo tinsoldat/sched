@@ -84,10 +84,9 @@ const parseBody = body => {
   $('.minicalendar_viewer').each((i, calendar) => {
 
     const h3 = $(calendar).prev().text()
-    console.log(i);
 
     $('.list1 > li', calendar).each((j, li) => {
-      events.push(h3 + ' ' + $($(li).text()).text())
+      events.push(h3 + ' ' + $(li).text().replaceAll(/<.+?>/, ''))
     })
   })
 
@@ -95,8 +94,8 @@ const parseBody = body => {
 
 }
 
-const get = async (offset = 0, days = 7, mode = 'future', url) => {
-  const URI = `https://wikiwiki.jp/nijisanji/?plugin=minicalendar_viewer&file=配信予定&date=${offset}*${days}&mode=${mode}`
+const get = async () => {
+  const URI = `https://wikiwiki.jp/nijisanji/配信予定リスト`
   console.log('GET ' + URI);
   const response = await fetch(URI)
   const body = await response.text()
@@ -106,11 +105,11 @@ const get = async (offset = 0, days = 7, mode = 'future', url) => {
 /**
  * get schedule
  */
-const fetchSchedule = async (offset = 0, days = 1, mode = 'past') => {
+const fetchSchedule = async () => {
 
-  // const body = await get(offset, days, mode)
-  // fs.writeFileSync('./server/public/temp.html, body)
-  const body = fs.readFileSync('./server/public/temp.html').toString()
+  // const body = await get()
+  // fs.writeFileSync('public/temp.html', body)
+  const body = fs.readFileSync('public/temp.html').toString()
 
   const unresolved = []
   const events = parseBody(body)
