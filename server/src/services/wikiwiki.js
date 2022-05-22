@@ -86,7 +86,7 @@ const parseBody = body => {
     const h3 = $(calendar).prev().text()
 
     $('.list1 > li', calendar).each((j, li) => {
-      events.push(h3 + ' ' + $(li).text().replaceAll(/<.+?>/, ''))
+      events.push(h3 + ' ' + $(li).text().replace(/<.+>/, ''))
     })
   })
 

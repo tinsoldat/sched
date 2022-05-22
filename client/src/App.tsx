@@ -20,7 +20,7 @@ function App() {
   const { response: events, isLoading, error } = useFetch<IEvent[]>('api/events')
   const [date, setDate] = useState(() => {
     const date = new Date()
-    date.setDate(date.getDate() - date.getDay())
+    date.setDate(date.getDate() - date.getDay() - 7)
     return date
   })
 

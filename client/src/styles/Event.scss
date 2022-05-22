@@ -44,7 +44,9 @@
     max-width: 80px;
     max-height: 16px;
     overflow: hidden;
-
+    .compact > & {
+      display: none;
+    }
   }
 
   &__description {
@@ -58,6 +60,9 @@
   &__time-container {
     height: 100%;
     font-size: 12px;
+    .compact > & {
+      display: none;
+    }
   }
 
   &__time {
