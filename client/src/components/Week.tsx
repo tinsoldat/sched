@@ -1,14 +1,13 @@
 import React from 'react'
+import { addDays } from 'date-fns'
 import { Day } from './Day'
 import '../styles/Week.sass'
-import { IEvent } from '../contexts/EventsContext'
 
 interface WeekProps {
-  events: IEvent[],
   date: Date
 }
 
-export const Week = ({ events, date }: WeekProps) => {
+export const Week = ({ date }: WeekProps) => {
 
   return (
     <div className="week">
@@ -40,7 +39,7 @@ export const Week = ({ events, date }: WeekProps) => {
             <div className="gutter" />
             <div className="days">
               {[0, 0, 0, 0, 0, 0, 0].map(
-                (_val, i) => <Day key={i} date={date.getDate() + i} events={events} />
+                (_val, i) => <Day key={i} date={addDays(date, i)} />
               )
               }
             </div>

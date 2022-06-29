@@ -1,11 +1,13 @@
 import React from 'react'
-import { IEvent } from '../contexts/EventsContext'
 import { ILiver, LiversContext } from '../contexts/LiversContext'
+import { IEvent } from '../features/events/eventsSlice'
 import '../styles/Event.scss'
 //TODO add support for different density modes
 
-export const Event = ({ event }: { event: IEvent & { pos: { col: number, cols: number, div: number } } }) => {
-  let { date, feat, description, pos } = event
+export const Event = ({ event }: { event: IEvent }) => {
+  let { date, feat, description } = event
+  date = new Date(date);
+  
   const hours = date.getHours(), minutes = date.getMinutes()
   let minSinceMidnight = hours * 60 + minutes
   if (minSinceMidnight > 1380) minSinceMidnight -= minSinceMidnight % 1380
@@ -13,7 +15,6 @@ export const Event = ({ event }: { event: IEvent & { pos: { col: number, cols: n
   // const top = Math.floor((minSinceMidnight) / 15) / 0.96 + '%'
   const top = minSinceMidnight / 14.40 + '%'
   const time = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
-  const mode = (event.pos.cols > 1 || event.pos.div < .5) ? 'compact' : 'normal'
 
   const featNames = Object.keys(feat)
   return (
@@ -23,8 +24,8 @@ export const Event = ({ event }: { event: IEvent & { pos: { col: number, cols: n
         // const { name, avatar, color } = participants[0]
 
         return <div
-          className={'event ' + mode}
-          style={{ top, left: ((pos.col - 1) / pos.cols * pos.div * 100 + '%'), width: 'calc(' + ((1 / pos.cols * pos.div * 100 + '% - 1px)')) } as React.CSSProperties}
+          className='event'
+          style={{ top }}
         >
           {/* {pos?.col}/{pos?.cols} */}
           <div className="event__avatars">
