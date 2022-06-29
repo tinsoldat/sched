@@ -29,6 +29,9 @@ $cell: 1px solid lightgray
         border-left: $cell
         height: 16px
         bottom: 0
+      .day-name
+        display: block
+        margin-top: 16px
 
 .content
   flex-grow: 1
@@ -50,14 +53,13 @@ $cell: 1px solid lightgray
     margin-right: 4px
     font-size: 12px
 
-.days-container
-  position: relative
-  display: flex
-  flex-grow: 1
-
 .days
   flex-grow: 1
   display: flex
+  &-container
+    position: relative
+    display: flex
+    flex-grow: 1
 
 .hour-separators-container
   position: absolute

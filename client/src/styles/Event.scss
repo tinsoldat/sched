@@ -50,11 +50,13 @@
   }
 
   &__description {
+    width: 100%;
+    text-align: center;
     max-height: 32px;
     font-size: 12px;
     line-height: 1.4;
     overflow: hidden;
-    word-break: break-all;
+    word-break: normal;
   }
 
   &__time-container {

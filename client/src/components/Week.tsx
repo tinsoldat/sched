@@ -1,15 +1,14 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Day } from './Day'
 import '../styles/Week.sass'
 import { IEvent } from '../contexts/EventsContext'
 
 interface WeekProps {
   events: IEvent[],
-  filter: { livers: Set<string> }
   date: Date
 }
 
-export const Week = ({ events, filter, date }: WeekProps) => {  
+export const Week = ({ events, date }: WeekProps) => {
 
   return (
     <div className="week">
@@ -41,7 +40,7 @@ export const Week = ({ events, filter, date }: WeekProps) => {
             <div className="gutter" />
             <div className="days">
               {[0, 0, 0, 0, 0, 0, 0].map(
-                (_val, i) => <Day key={i} date={date.getDate() + i} events={events} filter={filter} />
+                (_val, i) => <Day key={i} date={date.getDate() + i} events={events} />
               )
               }
             </div>

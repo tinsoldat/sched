@@ -2,15 +2,10 @@ import React, { useState } from 'react'
 import '../styles/Navbar.scss'
 import filterIcon from '../images/filter.svg'
 import settingsIcon from '../images/settings.svg'
-import { Filter } from './Filter'
+import { Filter } from '../features/filter/Filter'
 import Settings from './Settings'
 
-type NavbarProps = {
-  filter: { livers: Set<string> },
-  setFilter: (filter: { livers: Set<string> }) => void
-}
-//TODO pinning to toolbar
-export const Navbar = ({ filter, setFilter }: NavbarProps) => {
+export const Navbar = () => {
   const [tab, setTab] = useState('')
 
   return (
@@ -18,7 +13,7 @@ export const Navbar = ({ filter, setFilter }: NavbarProps) => {
       <div className="navbar__slide-menu slide-menu" {...(tab === '' && { hidden: true })}>
         <div className="slide-menu__content">
           <Tab tab={tab} name='filter'>
-            <Filter filter={filter} setFilter={setFilter} />
+            <Filter />
           </Tab>
           <Tab tab={tab} name='settings'>
             <Settings />

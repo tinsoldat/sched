@@ -12,8 +12,9 @@ img
   font-weight: bold
   font-size: 12px
   text-align: right
-  margin: 12px 0
+  margin: 12px 0 12px auto
   cursor: pointer
+  width: fit-content
   &.active
     text-decoration: underline dashed
 
@@ -37,7 +38,7 @@ img
 .btn
   transition: background-color 200ms
   cursor: pointer
-  &:hover, &.checked
+  &.checked
     background-color: var(--theme-color)
   &:active
     background-color: #0008

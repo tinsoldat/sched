@@ -1,0 +1,11 @@
+.filter {
+  &__group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px 24px;
+  }
+
+  &__btn {
+    border-radius: 8px;
+  }
+}

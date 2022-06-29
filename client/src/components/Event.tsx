@@ -20,8 +20,7 @@ export const Event = ({ event }: { event: IEvent & { pos: { col: number, cols: n
     <LiversContext.Consumer>
       {(livers) => {
         const participants = featNames.map(name => livers.find(liver => liver.name === name)).filter(liver => liver) as ILiver[]
-        const { name, avatar, color } = participants[0]
-        let bgCounter = 4
+        // const { name, avatar, color } = participants[0]
 
         return <div
           className={'event ' + mode}
@@ -31,7 +30,7 @@ export const Event = ({ event }: { event: IEvent & { pos: { col: number, cols: n
           <div className="event__avatars">
             {participants.map(({ name, avatar, color }) =>
               <div className="event__avatar-container"
-              key={name}
+                key={name}
                 style={{ '--theme-color': color } as React.CSSProperties}
               >
                 <img
@@ -44,15 +43,9 @@ export const Event = ({ event }: { event: IEvent & { pos: { col: number, cols: n
               </div>
             )}
           </div>
-          <span className="event__name">
-            {name}
-          </span>
-          {description
-            &&
-            <div className="event__description">
-              {description}
-            </div>
-          }
+          <div className="event__description">
+            {description || '?'}
+          </div>
           <div className="event__time-container">
             <span className="event__time">{time}</span>
           </div>

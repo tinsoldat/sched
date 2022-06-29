@@ -1,19 +1,21 @@
 import React from 'react'
+import { useAppSelector } from '../app/hooks'
 import { IEvent } from '../contexts/EventsContext'
+import { selectFiltered } from '../features/filter/filterSlice'
 import { Event } from './Event'
 
 interface DayProps {
   date: number,
   events: IEvent[],
-  filter: { livers: Set<string> }
 }
 
-export const Day = ({ date, events, filter }: DayProps) => {
+export const Day = ({ date, events }: DayProps) => {
+  const filteredLivers = useAppSelector(selectFiltered)
   const now = new Date()
 
   const today = events.filter(val => {
     const isToday = val.date.getDate() === date
-    const isFiltered = !Object.keys(val.feat).every(name => !filter.livers.has(name))
+    const isFiltered = !Object.keys(val.feat).every(name => !filteredLivers[name]);
     return isFiltered && isToday
   }).sort((e1, e2) => e1.date.valueOf() - e2.date.valueOf()) as (IEvent & { pos: { col: number, cols: number, div: number } })[]
 
@@ -27,7 +29,6 @@ export const Day = ({ date, events, filter }: DayProps) => {
 
   const computeLayout = () => {
     for (let i = 0; i < today.length; i++) {
-      const q = i
       const cur = today[i];
       cur.pos = { col: 1, cols: 1, div: 1 }
       let prev

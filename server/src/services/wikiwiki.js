@@ -107,9 +107,9 @@ const get = async () => {
  */
 const fetchSchedule = async () => {
 
-  // const body = await get()
-  // fs.writeFileSync('public/temp.html', body)
-  const body = fs.readFileSync('public/temp.html').toString()
+  const body = await get()
+  fs.writeFileSync('public/temp.html', body)
+  // const body = fs.readFileSync('public/temp.html').toString()
 
   const unresolved = []
   const events = parseBody(body)
@@ -123,7 +123,7 @@ const fetchSchedule = async () => {
 
   console.log(unresolved, 'unable to parse events:', unresolved.length)
 
-  return { events, unresolved }
+  return { events, unresolved };
 }
 
 /**
