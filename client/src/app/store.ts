@@ -1,12 +1,14 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import filterReducer, { add, remove } from '../features/filter/filterSlice';
 import eventsReducer from '../features/events/eventsSlice';
+import uiSlice from '../features/ui/uiSlice';
 // import liversReducer from '../features/livers/liversSlice';
 
 export const store = configureStore({
   reducer: {
     filter: filterReducer,
     events: eventsReducer,
+    ui: uiSlice,
     // livers: liversReducer,
   },
   devTools: {

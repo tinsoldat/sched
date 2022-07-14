@@ -1,25 +1,28 @@
-import React, { useState } from 'react'
+import React from 'react'
 import '../styles/Navbar.scss'
 import filterIcon from '../images/filter.svg'
 import settingsIcon from '../images/settings.svg'
 import { Filter } from '../features/filter/components/Filter'
 import Settings from './Settings'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { closeTab, Tabs, toggleTab } from '../features/ui/uiSlice'
 
 export const Navbar = () => {
-  const [tab, setTab] = useState('')
+  const dispatch = useAppDispatch();
+  const tab = useAppSelector(state => state.ui.tab);
 
   return (
     <div className="navbar">
-      <div className="navbar__slide-menu slide-menu" {...(tab === '' && { hidden: true })}>
+      <div className="navbar__slide-menu slide-menu" hidden={tab === Tabs.none}>
         <div className="slide-menu__content">
-          <Tab tab={tab} name='filter'>
+          <Tab name={Tabs.filter}>
             <Filter />
           </Tab>
-          <Tab tab={tab} name='settings'>
+          <Tab name={Tabs.options}>
             <Settings />
           </Tab>
         </div>
-        <div className="slide-menu__padding" onClick={() => setTab('')}></div>
+        <div className="slide-menu__padding" onClick={() => dispatch(closeTab())}></div>
       </div>
       <div className="navbar__toolbar">
         <div className="navbar__header">
@@ -27,9 +30,9 @@ export const Navbar = () => {
             <div className="navbar__group">
               <Button
                 type='navbar'
-                onClick={() => setTab(tab === 'filter' ? '' : 'filter')}
+                onClick={() => dispatch(toggleTab(Tabs.filter))}
                 icon={filterIcon}
-                isPressed={tab === 'filter'} />
+                isPressed={tab === Tabs.filter} />
             </div>
           </div>
         </div>
@@ -37,9 +40,9 @@ export const Navbar = () => {
           <div className="navbar__group">
             <Button
               type='navbar'
-              onClick={() => setTab(tab === 'settings' ? '' : 'settings')}
+              onClick={() => dispatch(toggleTab(Tabs.options))}
               icon={settingsIcon}
-              isPressed={tab === 'settings'} />
+              isPressed={tab === Tabs.options} />
           </div>
         </div>
       </div>
@@ -61,10 +64,9 @@ const Button = ({ type, onClick, icon, isPressed }: { type?: string, onClick?: (
   )
 }
 
-const Tab = ({ children, name, tab }: { children: React.ReactNode, name: string, tab: string }) => {
-  return <div className="slide-menu__tab"
-    {...(tab !== name && { hidden: true })}
-  >
+const Tab = ({ children, name }: { children: React.ReactNode, name: Tabs }) => {
+  const tab = useAppSelector(state => state.ui.tab);
+  return <div className="slide-menu__tab" hidden={name !== tab}>
     {children}
   </div>
 }
