@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import '../styles/Navbar.scss'
 import filterIcon from '../images/filter.svg'
 import settingsIcon from '../images/settings.svg'
-import { Filter } from '../features/filter/Filter'
+import { Filter } from '../features/filter/components/Filter'
 import Settings from './Settings'
 
 export const Navbar = () => {
