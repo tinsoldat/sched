@@ -11,9 +11,9 @@ export const Event = ({ event }: { event: IEvent }) => {
   const hours = date.getHours(), minutes = date.getMinutes()
   let minSinceMidnight = hours * 60 + minutes
   if (minSinceMidnight > 1380) minSinceMidnight -= minSinceMidnight % 1380
-  //steps of 15 minutes, no 23hr+
-  // const top = Math.floor((minSinceMidnight) / 15) / 0.96 + '%'
-  const top = minSinceMidnight / 14.40 + '%'
+  // steps of 15 minutes, no 23hr+
+  const top = Math.floor((minSinceMidnight) / 15) / 0.96 + '%'
+  // const top = minSinceMidnight / 14.40 + '%'
   const time = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
 
   const featNames = Object.keys(feat)

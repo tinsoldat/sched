@@ -13,7 +13,7 @@ export const Unit = ({ unit, members }: UnitProps) => {
 
   return (
     <div className="filter__groups-container" key={unit}>
-      <h3 className='secondary' onClick={() => dispatch(toggle(members.map(member => member.name)))}>
+      <h3 className='secondary unit-name' onClick={() => dispatch(toggle(...members.map(member => member.name)))}>
         {unit.replace(/^_.+/, members.map(({ name }: ILiver) => name).join('、'))}
       </h3>
       <div className="filter__group" key={unit} data-group={unit}>

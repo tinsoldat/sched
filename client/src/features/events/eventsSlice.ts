@@ -44,7 +44,9 @@ export const selectByDate = createSelector(
 
 export const selectByDateAndFilter = createSelector(
   [selectEvents, selectFiltered, (_state, date) => date],
-  (events, livers, date) => events.filter(event => isSameDay(new Date(event.date), date) && !Object.keys(event.feat).every(name => !livers[name]))
+  (events, livers, date) => events
+    .filter(event => isSameDay(new Date(event.date), date))
+    .filter(event => !Object.keys(event.feat).every(name => !livers[name]))
 );
 
 export default eventsSlice.reducer;

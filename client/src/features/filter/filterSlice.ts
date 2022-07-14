@@ -6,26 +6,20 @@ export interface FilterState {
   categories: Record<string, boolean>;
 }
 
-const initialState: FilterState = {
-  livers: {},
-  categories: {},
+const initialState: () => FilterState = () => {
+  const storedState = window.localStorage.getItem('filter');
+  return storedState ? JSON.parse(storedState) : { livers: {}, categories: {} };
 };
 
 export const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
-    add: (state, action: PayloadAction<string | string[]>) => {
-      if (Array.isArray(action.payload))
-        action.payload.forEach(liver => state.livers[liver] = true);
-      else
-        state.livers[action.payload] = true;
+    add: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach(liver => state.livers[liver] = true);
     },
-    remove: (state, action: PayloadAction<string | string[]>) => {
-      if (Array.isArray(action.payload))
-        action.payload.forEach(liver => state.livers[liver] = false);
-      else
-        state.livers[action.payload] = false;
+    remove: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach(liver => state.livers[liver] = false);
     },
   },
 });
@@ -37,24 +31,13 @@ export const selectFiltered = createSelector(
   livers => Object.fromEntries(Object.entries(livers).filter(([_name, status]) => status))
 )
 
-export const selectFilteredByName = createSelector(
-  [selectFiltered, (_, name: string) => name],
-  (livers, name) => livers[name]
-)
-
 export const toggle =
-  (livers: string | string[]): AppThunk =>
+  (...livers: string[]): AppThunk =>
   (dispatch, getState) => {
   const filter = selectFiltered(getState());
 
-  if (Array.isArray(livers)) {
-    const flag = livers.every(liver => !filter[liver]);
-    if (flag) {
-      dispatch(add(livers));
-    } else {
-      dispatch(remove(livers));
-    }
-  } else if (!filter[livers]) {
+  const flag = livers.every(liver => !filter[liver]);
+  if (flag) {
     dispatch(add(livers));
   } else {
     dispatch(remove(livers));

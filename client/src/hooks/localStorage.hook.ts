@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function useLocalStorage<T>(
   key: string,
   initialValue: T,
-  json: { replacer: (key: string, value: any) => any | Array<string>, reviver: (key: string, value: any) => any }
+  json?: { replacer: (key: string, value: any) => any | Array<string>, reviver: (key: string, value: any) => any }
 ): [T, (value: T | ((val: T) => T)) => void] {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
@@ -12,7 +12,7 @@ export default function useLocalStorage<T>(
       // Get from local storage by key
       const item = window.localStorage.getItem(key);
       // Parse stored json or if none return initialValue
-      return item ? JSON.parse(item, json.reviver) : initialValue;
+      return item ? JSON.parse(item, json?.reviver) : initialValue;
     } catch (error) {
       // If error also return initialValue
       console.log(error);
@@ -30,7 +30,7 @@ export default function useLocalStorage<T>(
       // Save state
       setStoredValue(valueToStore);
       // Save to local storage
-      window.localStorage.setItem(key, JSON.stringify(valueToStore, json.replacer));
+      window.localStorage.setItem(key, JSON.stringify(valueToStore, json?.replacer));
     } catch (error) {
       // A more advanced implementation would handle the error case
       console.log(error);
