@@ -59,13 +59,14 @@
   display: flex;
 
   &[hidden] {
-    visibility: hidden;
+    display: none;
   }
 
   &__tab {
     margin: 40px 16px 240px 16px;
-    &[hidden] {
-      visibility: hidden;
+    display: none;
+    &[data-open] {
+      display: block;
     }
   }
 

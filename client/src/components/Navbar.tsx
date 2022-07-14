@@ -66,7 +66,7 @@ const Button = ({ type, onClick, icon, isPressed }: { type?: string, onClick?: (
 
 const Tab = ({ children, name }: { children: React.ReactNode, name: Tabs }) => {
   const tab = useAppSelector(state => state.ui.tab);
-  return <div className="slide-menu__tab" hidden={name !== tab}>
+  return <div className="slide-menu__tab" {...{'data-open': tab === name || null}}>
     {children}
   </div>
 }
