@@ -6,15 +6,26 @@ interface NavbarProps {
   setActive: Function;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ setActive, activeTab, children }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  setActive,
+  activeTab,
+  children,
+}) => {
   return (
-    <nav className="navbar bg-dark text-light">
+    <nav className="navbar bg-dark text-light" onClick={() => setActive(-1)}>
       <ul className="navbar__items">
         {React.Children.map(children, (item, index) =>
           (item as React.ReactElement)?.type === NavbarVoid ? (
             <NavbarVoid />
           ) : (
-            <NavbarItem key={index} index={index} setActive={setActive} activeTab={activeTab}>{item}</NavbarItem>
+            <NavbarItem
+              key={index}
+              index={index}
+              setActive={setActive}
+              activeTab={activeTab}
+            >
+              {item}
+            </NavbarItem>
           )
         )}
       </ul>
@@ -29,8 +40,24 @@ interface NavbarItemProps {
   activeTab: number;
 }
 
-export const NavbarItem: React.FC<NavbarItemProps> = ({ index, setActive, activeTab, children }) => {
-  return <li className="navbar__item" data-active={activeTab === index || null} onClick={() => setActive(index)}>{children}</li>;
+export const NavbarItem: React.FC<NavbarItemProps> = ({
+  index,
+  setActive,
+  activeTab,
+  children,
+}) => {
+  return (
+    <li
+      className="navbar__item"
+      data-active={activeTab === index || null}
+      onClick={(e) => {
+        e.stopPropagation();
+        setActive(index);
+      }}
+    >
+      {children}
+    </li>
+  );
 };
 
 export const NavbarVoid: React.FC = () => {
