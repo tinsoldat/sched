@@ -26,7 +26,9 @@ const JST_OFFSET = -540 // 9 hours
 const OFFSET = JST_OFFSET - LOCALE_OFFSET
 
 const parseEvent = ({ date, feat, at, description, note }) => {
-  const day = date.match(dayRegex).map(val => parseInt(val))
+  //FIXME
+  const day = date.match(dayRegex)?.map(val => parseInt(val))
+  if (!day) return;
   date = new Date(day[3], day[2] - 1, day[1], day[4] || 0, day[5] + OFFSET || 0)
 
   let [_input, who, incl, official, platform, atNote] = at.replace('チャンネル', '').match(atRegex) ?? [at, 'other']

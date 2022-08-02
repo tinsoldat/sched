@@ -1,0 +1,50 @@
+:root {
+  --main: #2a4b70;
+  --light: #7e9bbd;
+  --dark: #17293d;
+  --regular: #467dbd;
+  --icon: lightgray;
+}
+
+$main: var(--main);
+$light: var(--light);
+$dark: var(--dark);
+$regular: var(--regular);
+$icon: var(--icon);
+$theme: var(--theme-color);
+
+.bg {
+  &-main {
+    background-color: $main;
+  }
+  &-light {
+    background-color: $light;
+  }
+  &-dark {
+    background-color: $dark;
+  }
+  &-regular {
+    background-color: $regular;
+  }
+  &-theme {
+    background-color: $theme;
+  }
+}
+
+.text {
+  &-main {
+    color: $main;
+  }
+  &-light {
+    color: $light;
+  }
+  &-dark {
+    color: $dark;
+  }
+  &-regular {
+    color: $regular;
+  }
+  &-theme {
+    color: $theme;
+  }
+}

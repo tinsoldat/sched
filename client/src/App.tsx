@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './styles/App.sass'
 import './styles/common.sass'
-import { Navbar } from './components/Navbar'
+import { Sidebar } from './components/sidebar/Sidebar'
 import { Week } from './components/Week'
 import { useFetch } from './hooks/fetch.hook'
 import { ILiver, LiversContext } from './contexts/LiversContext'
@@ -35,7 +35,7 @@ function App() {
   return (
     <div className="App">
       <LiversContext.Provider value={livers || []}>
-        <Navbar />
+        <Sidebar />
         <div className="main">
           {isLoading && <div className="spinner">Loading...</div>}
           {error && <div className="error">{error.message}</div>}
